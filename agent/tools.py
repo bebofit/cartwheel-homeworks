@@ -52,8 +52,20 @@ def get_policy(ctx: AuthContext, policy_id: str) -> dict[str, Any]:
     Implementation notes:
         agent.helpcenter.load_policy_docs() returns every parsed doc.
     """
-    ### YOUR CODE HERE (HW1)
-    raise NotImplementedError("HW1: implement get_policy")
+    for doc in load_policy_docs():
+        if doc.policy_id == policy_id:
+            return {
+                "ok": True,
+                "policy_id": doc.policy_id,
+                "title": doc.title,
+                "audience": doc.audience,
+                "body": doc.body,
+            }
+    return {
+        "ok": False,
+        "error": "not_found",
+        "reason": f"no policy with id {policy_id!r}",
+    }
 
 
 def search_products(
@@ -95,8 +107,50 @@ def search_products(
         agent.db.list_products(conn, store_id) gives the candidate set.
         Use `with db.connection() as conn:` to close the database automatically.
     """
-    ### YOUR CODE HERE (HW1)
-    raise NotImplementedError("HW1: implement search_products")
+    text = query.strip()
+    if not text:
+        return {
+            "ok": False,
+            "error": "invalid_argument",
+            "reason": "query must be non-empty",
+        }
+    if max_price_usd is not None and max_price_usd <= 0:
+        return {
+            "ok": False,
+            "error": "invalid_argument",
+            "reason": "max_price_usd must be strictly positive",
+        }
+    capped = min(MAX_SEARCH_LIMIT, max(1, limit))
+    tokens = text.lower().split()
+    with db.connection() as conn:
+        store_id = None
+        if store is not None:
+            match = db.get_store_by_name(conn, store)
+            if match is None:
+                return {
+                    "ok": False,
+                    "error": "not_found",
+                    "reason": f"no store named {store!r}",
+                }
+            store_id = match.id
+        candidates = db.list_products(conn, store_id)
+    matches = []
+    for product in candidates:
+        haystack = f"{product.title} {product.description}".lower()
+        if all(token in haystack for token in tokens):
+            if max_price_usd is not None and product.price_usd > max_price_usd:
+                continue
+            matches.append(
+                {
+                    "product_id": product.id,
+                    "store_id": product.store_id,
+                    "title": product.title,
+                    "price_usd": product.price_usd,
+                }
+            )
+    matches.sort(key=lambda item: (item["price_usd"], item["product_id"]))
+    products = matches[:capped]
+    return {"ok": True, "products": products, "count": len(products)}
 
 
 def list_my_orders(ctx: AuthContext) -> dict[str, Any]:
@@ -121,8 +175,28 @@ def list_my_orders(ctx: AuthContext) -> dict[str, Any]:
         scope is baked into which query you run. That is the point of the
         tool: the model cannot ask for someone else's orders through it.
     """
-    ### YOUR CODE HERE (HW1)
-    raise NotImplementedError("HW1: implement list_my_orders")
+    with db.connection() as conn:
+        if ctx.role == "shopper":
+            orders = db.list_orders_for_user(conn, ctx.user_id, DEFAULT_ORDER_LIMIT)
+        elif ctx.role == "merchant":
+            if ctx.store_id is None:
+                return {
+                    "ok": False,
+                    "error": "invalid_argument",
+                    "reason": "merchant order listing requires a store id",
+                }
+            orders = db.list_orders_for_store(conn, ctx.store_id, DEFAULT_ORDER_LIMIT)
+        else:
+            return {
+                "ok": False,
+                "error": "invalid_argument",
+                "reason": (
+                    "support staff have no orders of their own; "
+                    "look up a specific order with get_order"
+                ),
+            }
+    public = [order.to_public_dict() for order in orders]
+    return {"ok": True, "orders": public, "count": len(public)}
 
 
 def cancel_order(ctx: AuthContext, order_id: int, reason: str) -> dict[str, Any]:
@@ -167,8 +241,29 @@ def cancel_order(ctx: AuthContext, order_id: int, reason: str) -> dict[str, Any]
     paused = kill_switch("cancel_order")
     if paused is not None:
         return {"ok": False, "error": "paused", "reason": paused}
-    ### YOUR CODE HERE (HW1)
-    raise NotImplementedError("HW1: implement cancel_order")
+    with db.connection() as conn:
+        order = db.get_order(conn, order_id)
+        if order is None:
+            return {
+                "ok": False,
+                "error": "not_found",
+                "reason": f"no order #{order_id}",
+            }
+        if not can_cancel_order(ctx, order.user_id, order.store_id):
+            return permission_denied(
+                f"role '{ctx.role}' (user {ctx.user_id}) may not cancel order #{order_id}"
+            )
+        if order.status != "placed":
+            return {
+                "ok": False,
+                "error": "not_eligible",
+                "reason": (
+                    f"order #{order_id} has status '{order.status}'; "
+                    "orders can be cancelled only before shipment"
+                ),
+            }
+        db.set_order_status(conn, order_id, "cancelled")
+    return {"ok": True, "order_id": order_id, "status": "cancelled"}
 
 
 def find_order(ctx: AuthContext, query: str) -> dict[str, Any]:
@@ -202,5 +297,78 @@ def find_order(ctx: AuthContext, query: str) -> dict[str, Any]:
         (at most 5), each as the dict returned by agent.db. If no orders
         match, return {"ok": True, "orders": []}.
     """
-    ### YOUR CODE HERE (HW1)
-    raise NotImplementedError("HW1: implement find_order")
+    if ctx.role == "shopper":
+        scope: dict[str, Any] = {"user_id": ctx.user_id}
+    elif ctx.role == "merchant":
+        if ctx.store_id is None:
+            return {
+                "ok": False,
+                "error": "invalid_argument",
+                "reason": "merchant order search requires a store id",
+            }
+        scope = {"store_id": ctx.store_id}
+    elif ctx.role == "support":
+        scope = {"all_orders": True}
+    else:
+        return {
+            "ok": False,
+            "error": "invalid_argument",
+            "reason": f"role {ctx.role!r} cannot search orders",
+        }
+    needle = query.strip().lower()
+    if not needle:
+        return {"ok": True, "orders": []}
+    with db.connection() as conn:
+        titles = {product.id: product.title for product in db.list_products(conn)}
+        candidates = db.list_order_search_candidates(conn, **scope)
+    matches = [
+        order.to_public_dict()
+        for order in candidates
+        if needle in titles.get(order.product_id, "").lower()
+    ]
+    return {"ok": True, "orders": matches[:5]}
+
+
+def lookup_store(ctx: AuthContext, store: str) -> dict[str, Any]:
+    """Look up one store's public profile. Risk tier: read.
+
+    Every role may read this. Store names and policy overrides are public
+    catalog facts, not customer data. Matching uses agent.db.get_store_by_name
+    (case-insensitive name or slug).
+
+    Args:
+        ctx: The caller's auth context. Unused; the profile is public.
+        store: Store name or slug. Must be non-empty after stripping whitespace.
+
+    Returns:
+        On success: {"ok": True, "store_id": int, "name": str, "slug": str,
+        "category": str, "return_window_days_override": int | None,
+        "restocking_fee_opt_in": bool}. A null return window means the store
+        uses the platform default.
+        Empty store string: {"ok": False, "error": "invalid_argument", ...}.
+        Unknown store: {"ok": False, "error": "not_found", ...}.
+    """
+    name = store.strip()
+    if not name:
+        return {
+            "ok": False,
+            "error": "invalid_argument",
+            "reason": "store name must be non-empty",
+        }
+    with db.connection() as conn:
+        match = db.get_store_by_name(conn, name)
+    if match is None:
+        return {
+            "ok": False,
+            "error": "not_found",
+            "reason": f"no store named {store!r}",
+        }
+    return {
+        "ok": True,
+        "store_id": match.id,
+        "name": match.name,
+        "slug": match.slug,
+        "category": match.category,
+        "return_window_days_override": match.return_window_days_override,
+        "restocking_fee_opt_in": match.restocking_fee_opt_in,
+    }

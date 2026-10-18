@@ -427,6 +427,12 @@ def find_order(
     return _call(wrapper, hw_tools.find_order, query)
 
 
+@function_tool
+def lookup_store(wrapper: RunContextWrapper[AuthContext], store: str) -> dict[str, Any]:
+    """Look up a store's public profile, including any return-window override."""
+    return _call(wrapper, hw_tools.lookup_store, store)
+
+
 # Progressive disclosure: a session exposes only the tools its role can use.
 # Fewer tools mean fewer wrong choices and cleaner evals. At dev scale the
 # only difference is that support staff, who have no orders of their own,
@@ -435,6 +441,7 @@ _COMMON_TOOLS = [
     search_help_center,
     get_policy,
     search_products,
+    lookup_store,
     get_order,
     issue_refund,
     cancel_order,

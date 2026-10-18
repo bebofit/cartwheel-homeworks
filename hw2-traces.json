@@ -1,0 +1,24 @@
+[
+  {
+    "trace_id": "eac8045dea77b80f801d1bab275a2a98",
+    "permalink": "https://cloud.langfuse.com/project/cmv8pw2fm06t4ad0e1o6tas0h/traces/eac8045dea77b80f801d1bab275a2a98",
+    "prompt_version": "d108f6949e5e",
+    "user_role": "shopper",
+    "user_id": "1",
+    "tool_order": [
+      "get_order"
+    ],
+    "final_status": "completed"
+  },
+  {
+    "trace_id": "923c3a56625c9a7d9a0d5551e1fb1496",
+    "permalink": "https://cloud.langfuse.com/project/cmv8pw2fm06t4ad0e1o6tas0h/traces/923c3a56625c9a7d9a0d5551e1fb1496",
+    "prompt_version": "b79034b04058",
+    "user_role": "shopper",
+    "user_id": "1",
+    "tool_order": [
+      "get_order"
+    ],
+    "final_status": "completed"
+  }
+]
