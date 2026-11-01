@@ -1,0 +1,831 @@
+{
+  "schema": "review_app.v1",
+  "excluded": [
+    {
+      "scenario_id": "support-0090",
+      "reason": "Part A: used to evaluate the default Langfuse trace view"
+    },
+    {
+      "scenario_id": "support-0118",
+      "reason": "Part A: used to evaluate the default Langfuse trace view"
+    },
+    {
+      "scenario_id": "support-0108",
+      "reason": "Part A: used to evaluate the default Langfuse trace view"
+    },
+    {
+      "scenario_id": "support-0055",
+      "reason": "Part A: used to evaluate the default Langfuse trace view"
+    },
+    {
+      "scenario_id": "support-0232",
+      "reason": "Part A: used to evaluate the default Langfuse trace view"
+    },
+    {
+      "scenario_id": "support-0036",
+      "reason": "Part A: used to evaluate the default Langfuse trace view"
+    }
+  ],
+  "items": [
+    {
+      "trace_id": "b974295764968598f2152be7f81ab8ee",
+      "session_id": "c8f407c5-2596-4625-9e77-c951ae517a4c",
+      "scenario_id": "support-0106",
+      "reason": "uniform random draw (seed 20261029) from 385 eligible traces",
+      "batch": "batch1_uniform",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "95ad8bdc58f3b0be10ebc577c54c6f0b",
+      "session_id": "6035bd6d-c32a-4501-bf3e-bcc009bbb94c",
+      "scenario_id": "support-0123",
+      "reason": "uniform random draw (seed 20261029) from 385 eligible traces",
+      "batch": "batch1_uniform",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "47d6cf0cbcda77b8e26b2c041d0b61e8",
+      "session_id": "5ffb4076-f19b-445d-9fcb-813d286c5d9c",
+      "scenario_id": "support-0065",
+      "reason": "uniform random draw (seed 20261029) from 385 eligible traces",
+      "batch": "batch1_uniform",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "dda7be806095002accd684a77de0e1ad",
+      "session_id": "d3697296-6326-47c3-b9af-86a8f70b4d47",
+      "scenario_id": "support-0133",
+      "reason": "uniform random draw (seed 20261029) from 385 eligible traces",
+      "batch": "batch1_uniform",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "775d297adae6359ab1e7a41b6961233d",
+      "session_id": "e3508e3b-8be3-40d9-a6ab-5b8b7ed7757c",
+      "scenario_id": "support-0014",
+      "reason": "uniform random draw (seed 20261029) from 385 eligible traces",
+      "batch": "batch1_uniform",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "9bb7b68c52c2b1e64f96b30727c3f990",
+      "session_id": "4f8c7b6a-cda2-43ef-914f-250aebf2bed4",
+      "scenario_id": "support-0087",
+      "reason": "uniform random draw (seed 20261029) from 385 eligible traces",
+      "batch": "batch1_uniform",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "5c63cc61ee8a3a8d9198e7e40a910883",
+      "session_id": "cf0681c7-24ce-46b8-9d08-3e553ee9071f",
+      "scenario_id": "support-0033",
+      "reason": "uniform random draw (seed 20261029) from 385 eligible traces",
+      "batch": "batch1_uniform",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "38c1f899c5f4813e878d9d153bbb0de5",
+      "session_id": "eba05c48-7b97-4134-b3ce-086537f3e112",
+      "scenario_id": "support-0196",
+      "reason": "uniform random draw (seed 20261029) from 385 eligible traces",
+      "batch": "batch1_uniform",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "f65c1bce41da0177869bf6f61ce53511",
+      "session_id": "05088c92-3ecd-44ca-a889-16750f94b613",
+      "scenario_id": "support-0006",
+      "reason": "uniform random draw (seed 20261029) from 385 eligible traces",
+      "batch": "batch1_uniform",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "e7d9817982a71fb4bc649ec8bad2b0a9",
+      "session_id": "15ee8799-0f0e-493b-91f9-a586ecf2656d",
+      "scenario_id": "support-0240",
+      "reason": "uniform random draw (seed 20261029) from 385 eligible traces",
+      "batch": "batch1_uniform",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "9bb5840c485c4885706e622d072f0c16",
+      "session_id": "6dd54f9c-c297-44b1-b3e7-d1af3638f593",
+      "scenario_id": "support-0199",
+      "reason": "uniform random draw (seed 20261029) from 385 eligible traces",
+      "batch": "batch1_uniform",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "e861a5f4452919c24a89f50eda015618",
+      "session_id": "2e3ced2e-4642-4a87-9f91-cc7cad36bda3",
+      "scenario_id": "support-0130",
+      "reason": "uniform random draw (seed 20261029) from 385 eligible traces",
+      "batch": "batch1_uniform",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "91aac8b8646d7664081e356dc578c15e",
+      "session_id": "921d6668-19f1-4618-ab78-fb48d35fb17c",
+      "scenario_id": "support-0150",
+      "reason": "uniform random draw (seed 20261029) from 385 eligible traces",
+      "batch": "batch1_uniform",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "1b9ee6c7bd61d4daacf8389ff1be4d01",
+      "session_id": "c05921b6-bc15-404c-b8c4-0168eabcb838",
+      "scenario_id": "support-0077",
+      "reason": "uniform random draw (seed 20261029) from 385 eligible traces",
+      "batch": "batch1_uniform",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "58fc7bcfabb5e9b4233014c35c2e2518",
+      "session_id": "e8dbeb8f-588f-4f26-9f4d-17361acd0094",
+      "scenario_id": "support-0079",
+      "reason": "uniform random draw (seed 20261029) from 385 eligible traces",
+      "batch": "batch1_uniform",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "9dc97745dabe33d8170c91b65a35ccd0",
+      "session_id": "c6ab4f46-eb78-4c05-8a84-73e96223a588",
+      "scenario_id": "support-0209",
+      "reason": "closest to centre of cluster 1 (50 traces; 100% shopper; tools: get_order)",
+      "batch": "batch1_cluster",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "11d564f79f594aaf930f9800d2fab6f8",
+      "session_id": "02ee1993-885d-4348-acd8-f0c13331f851",
+      "scenario_id": "support-0184",
+      "reason": "closest to centre of cluster 8 (40 traces; 100% support; tools: get_order)",
+      "batch": "batch1_cluster",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "c78ae514e273c7d373eecc5dbbcbc5bc",
+      "session_id": "0d47e9f9-2742-4829-b7db-cbe4f8b76414",
+      "scenario_id": "support-0187",
+      "reason": "closest to centre of cluster 4 (40 traces; 80% merchant; tools: get_order)",
+      "batch": "batch1_cluster",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "2b93848825089e69878f4f8d7ce3f572",
+      "session_id": "c2b97826-3a84-4b83-a240-ca7ee7e253c8",
+      "scenario_id": "support-0034",
+      "reason": "closest to centre of cluster 6 (37 traces; 100% shopper; tools: find_order)",
+      "batch": "batch1_cluster",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "e0a1c1b706b83d29e2578f466ff2d6e0",
+      "session_id": "2b64ee4f-6afa-4ca9-9abe-54c8b9f70d1d",
+      "scenario_id": "support-0231",
+      "reason": "closest to centre of cluster 3 (31 traces; 100% shopper; tools: mixed or none; 100% follow-up turns)",
+      "batch": "batch1_cluster",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "f51ac9746347275f7ceb7f9fce7c4883",
+      "session_id": "04c7e1e8-d10c-440a-8e2c-a2447df5ac7a",
+      "scenario_id": "support-0052",
+      "reason": "closest to centre of cluster 14 (30 traces; 100% shopper; tools: mixed or none; 100% follow-up turns)",
+      "batch": "batch1_cluster",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "e5740820f0d01d057f021bb58a44a805",
+      "session_id": "5eed2fad-c367-4ed8-b997-b1d809e510da",
+      "scenario_id": "support-0062",
+      "reason": "closest to centre of cluster 2 (28 traces; 71% shopper; tools: lookup_store + get_order)",
+      "batch": "batch1_cluster",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "0901c059243c515d01ec241fa13c0147",
+      "session_id": "d001f936-5676-4239-86c7-79399a1d9fdd",
+      "scenario_id": "support-0088",
+      "reason": "closest to centre of cluster 13 (21 traces; 43% support; tools: get_order + issue_refund)",
+      "batch": "batch1_cluster",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "8b941207e057009c0e08ab2cf9732b14",
+      "session_id": "1bacc81c-a0bb-46cd-b4db-a2c1efb99837",
+      "scenario_id": "support-0116",
+      "reason": "closest to centre of cluster 5 (21 traces; 100% support; tools: mixed or none; 100% follow-up turns)",
+      "batch": "batch1_cluster",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "28912e70619b4dde7e563e8b21bca03f",
+      "session_id": "43f2a6f3-6538-47d2-91b7-e2bc3bcfeba9",
+      "scenario_id": "support-0028",
+      "reason": "closest to centre of cluster 0 (20 traces; 100% merchant; tools: mixed or none; 80% follow-up turns)",
+      "batch": "batch1_cluster",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "6e88a8ac1b39975ee59a986272ed4383",
+      "session_id": "5c50f708-6152-4901-866c-2ff025732863",
+      "scenario_id": "support-0205",
+      "reason": "closest to centre of cluster 10 (19 traces; 63% merchant; tools: search_products)",
+      "batch": "batch1_cluster",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "5a0d99c5551fee6bf3ee2d2bbe5698bc",
+      "session_id": "4eaba7ab-e1a8-48a5-872c-0c6f666c0e06",
+      "scenario_id": "support-0097",
+      "reason": "closest to centre of cluster 9 (17 traces; 88% shopper; tools: list_my_orders)",
+      "batch": "batch1_cluster",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "955d6d523fa639d6ad028c25ee995a92",
+      "session_id": "1c667067-1945-484e-8e65-db1772716964",
+      "scenario_id": "support-0200",
+      "reason": "closest to centre of cluster 7 (14 traces; 100% shopper; tools: search_products)",
+      "batch": "batch1_cluster",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "cbf91d5009828db844a7b9fee403f9ab",
+      "session_id": "9e10c6d9-6987-4081-9e76-a3600d804bf2",
+      "scenario_id": "support-0140",
+      "reason": "closest to centre of cluster 11 (11 traces; 100% merchant; tools: mixed or none; 73% follow-up turns)",
+      "batch": "batch1_cluster",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "82551f6aecc8001d017407fab181047c",
+      "session_id": "4ffd805d-413d-430f-9e59-625a0674704f",
+      "scenario_id": "support-0046",
+      "reason": "closest to centre of cluster 12 (6 traces; 100% shopper; tools: search_products; 83% follow-up turns)",
+      "batch": "batch1_cluster",
+      "added_at": "2026-10-29T10:17:27+00:00"
+    },
+    {
+      "trace_id": "25480ec7475753379d14d50832fcda5e",
+      "session_id": "a9c6b4ac-e4c0-4856-871f-71b4eef17585",
+      "scenario_id": "support-0206",
+      "reason": "request type refund: seeded random draw (seed 20261030) from 55 eligible conversations (76 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "e0cee03ea0479cffee50c3a486097e8f",
+      "session_id": "4689cf88-0d49-4c0a-b719-7d7d27109f0e",
+      "scenario_id": "support-0103",
+      "reason": "request type refund: seeded random draw (seed 20261030) from 55 eligible conversations (76 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "3d0b46b635db35324585b5581512cc85",
+      "session_id": "ab460eb2-4935-4249-900e-459eaf106d54",
+      "scenario_id": "support-0225",
+      "reason": "request type refund: seeded random draw (seed 20261030) from 55 eligible conversations (76 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "24ce63f3f0a0ea11401c864427c823a9",
+      "session_id": "6395bc8a-6cc1-4a2d-906d-1c321cff0ee5",
+      "scenario_id": "support-0215",
+      "reason": "request type refund: seeded random draw (seed 20261030) from 55 eligible conversations (76 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "4f584755f64d2a3c41da2ba4b0679c9e",
+      "session_id": "34a65049-c5e4-4761-839d-9dcfd80b1c40",
+      "scenario_id": "support-0183",
+      "reason": "request type order_status: seeded random draw (seed 20261030) from 46 eligible conversations (80 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "c3ec8e7eca279d078947618a15a5e97d",
+      "session_id": "732b4622-474c-4e89-b362-b225dffd6097",
+      "scenario_id": "support-0001",
+      "reason": "request type order_status: seeded random draw (seed 20261030) from 46 eligible conversations (80 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "3a26507cd9217322932713eef250c26c",
+      "session_id": "653eef08-e97f-4b04-adc1-6fe32dde18d8",
+      "scenario_id": "support-0029",
+      "reason": "request type order_status: seeded random draw (seed 20261030) from 46 eligible conversations (80 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "750754a161b5145f71314b0a6acb29c2",
+      "session_id": "84b092f6-c1aa-4a64-a179-72646a5f3b56",
+      "scenario_id": "support-0016",
+      "reason": "request type order_status: seeded random draw (seed 20261030) from 46 eligible conversations (80 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "c337a6936534a7d68d80fc1f53df6d69",
+      "session_id": "17a85fa8-61f4-443a-9689-c62f453857b3",
+      "scenario_id": "support-0222",
+      "reason": "request type return_eligibility: seeded random draw (seed 20261030) from 35 eligible conversations (41 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "a2da23174eb51eedcbad13e8c64d5038",
+      "session_id": "a0add208-e142-4f10-be55-bb34479915ea",
+      "scenario_id": "support-0210",
+      "reason": "request type return_eligibility: seeded random draw (seed 20261030) from 35 eligible conversations (41 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "e5ab1e96574691d496dcd85fb3f47a47",
+      "session_id": "69bda86c-343d-4320-8fc5-e0ccae0d8286",
+      "scenario_id": "support-0058",
+      "reason": "request type return_eligibility: seeded random draw (seed 20261030) from 35 eligible conversations (41 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "f73ca5508805d803de2005c48f335706",
+      "session_id": "ad707dda-945a-444c-86a5-7f1ab29d34b3",
+      "scenario_id": "support-0048",
+      "reason": "request type return_eligibility: seeded random draw (seed 20261030) from 35 eligible conversations (41 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "ffb6a7b4b8f69f7671cede9126a20ceb",
+      "session_id": "115dabb2-24b2-4102-8821-15c44f5c8c16",
+      "scenario_id": "support-0204",
+      "reason": "request type product_search: seeded random draw (seed 20261030) from 22 eligible conversations (31 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "0c43906585e2d81f7c28a93a8292d02a",
+      "session_id": "99929951-4534-4333-bb78-26b0a0e95eb5",
+      "scenario_id": "support-0193",
+      "reason": "request type product_search: seeded random draw (seed 20261030) from 22 eligible conversations (31 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "889065b70b37bc15a91c885ea1d7ba65",
+      "session_id": "7917a48f-7f69-4398-b0ae-25853db21051",
+      "scenario_id": "support-0197",
+      "reason": "request type product_search: seeded random draw (seed 20261030) from 22 eligible conversations (31 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "43453f0e6d07b60acc082998fffa1120",
+      "session_id": "9c8037af-e897-43db-ad9b-7f4d24ccc699",
+      "scenario_id": "support-0122",
+      "reason": "request type cancellation: seeded random draw (seed 20261030) from 19 eligible conversations (31 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "1d4f0aa361d63cb141bacd538624798d",
+      "session_id": "a782d1ba-2eb1-4e44-84a2-71fb3b3252de",
+      "scenario_id": "support-0112",
+      "reason": "request type cancellation: seeded random draw (seed 20261030) from 19 eligible conversations (31 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "c5ca8d4ba67f6c197622dd85c8a67ebc",
+      "session_id": "ba694fb0-daaa-49c8-a0f2-5e16a815622b",
+      "scenario_id": "support-0107",
+      "reason": "request type cancellation: seeded random draw (seed 20261030) from 19 eligible conversations (31 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "274ee55a9069a4b506793579a236c734",
+      "session_id": "f2e459ac-e696-4420-ac79-e071c66c6c06",
+      "scenario_id": "support-0139",
+      "reason": "request type policy_question: seeded random draw (seed 20261030) from 16 eligible conversations (24 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "088f24cb2aa14b90344c66fc50475754",
+      "session_id": "f7c31f6f-6b01-409c-985b-f1d9b4153ad4",
+      "scenario_id": "support-0129",
+      "reason": "request type policy_question: seeded random draw (seed 20261030) from 16 eligible conversations (24 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "2c983254c01788e748ae602be6dd1e15",
+      "session_id": "184cdf43-9313-4407-9b96-ebe367bf5849",
+      "scenario_id": "support-0137",
+      "reason": "request type policy_question: seeded random draw (seed 20261030) from 16 eligible conversations (24 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "2a1cc81bdf3dd1ae501160a5beb39965",
+      "session_id": "3121aa7d-c2a0-4850-a813-5a579d839760",
+      "scenario_id": "support-0162",
+      "reason": "request type dispute: seeded random draw (seed 20261030) from 8 eligible conversations (17 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "de0dceeca59355645546a529cc70281c",
+      "session_id": "eefc50c7-0b19-4563-811f-ff23eeb71963",
+      "scenario_id": "support-0159",
+      "reason": "request type dispute: seeded random draw (seed 20261030) from 8 eligible conversations (17 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "f7dc30fa966f4456dcccf4670e8c4c56",
+      "session_id": "17524de2-075a-498d-94db-91c583314533",
+      "scenario_id": "support-0160",
+      "reason": "request type dispute: seeded random draw (seed 20261030) from 8 eligible conversations (17 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "e8fb3c802c4f43b055a0f6d4183fee07",
+      "session_id": "44a381bc-5608-4100-8478-921dee61337d",
+      "scenario_id": "support-0173",
+      "reason": "request type out_of_scope: seeded random draw (seed 20261030) from 7 eligible conversations (8 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "6f1ef3f65980f2d5b7198b0247829551",
+      "session_id": "247be3a5-f47b-4f23-aa0f-1088acac6a6b",
+      "scenario_id": "support-0169",
+      "reason": "request type out_of_scope: seeded random draw (seed 20261030) from 7 eligible conversations (8 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "6e8aa7e631aa105e33f86333adb9424d",
+      "session_id": "a57df1a6-768f-4419-8c30-e86f7c0108ea",
+      "scenario_id": "support-0171",
+      "reason": "request type out_of_scope: seeded random draw (seed 20261030) from 7 eligible conversations (8 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "5abfacc2e531ff419c1ebd6310ae202a",
+      "session_id": "477bad6d-aed8-45af-90d8-ef5d5a5bd492",
+      "scenario_id": "support-0167",
+      "reason": "request type account_change: seeded random draw (seed 20261030) from 6 eligible conversations (8 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "9af5c93b0ee2b1996fed8bc8de220e4a",
+      "session_id": "b836de8c-152e-4390-9891-762e1e7557f9",
+      "scenario_id": "support-0165",
+      "reason": "request type account_change: seeded random draw (seed 20261030) from 6 eligible conversations (8 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "d05ad345db5f7442c45d6fc359e87622",
+      "session_id": "0ea1a129-5492-4def-8a0e-4dc7ba7199a9",
+      "scenario_id": "support-0164",
+      "reason": "request type account_change: seeded random draw (seed 20261030) from 6 eligible conversations (8 traces)",
+      "batch": "batch2_dimension",
+      "added_at": "2026-10-29T22:50:49+00:00"
+    },
+    {
+      "trace_id": "a75213cc62d48dae5e3aaaaafcac463b",
+      "session_id": "78b66d19-ca1e-434a-ad63-26e355ab9e59",
+      "scenario_id": "support-0124",
+      "reason": "depth search for return_window_without_order_facts: return-window question where lookup_store or an order lookup is missing (seed 20261031; 28 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "951895028356d7a5c8988f3721c38231",
+      "session_id": "6913a312-fa6e-445e-ac71-ee31afb7da5b",
+      "scenario_id": "support-0227",
+      "reason": "depth search for return_window_without_order_facts: return-window question where lookup_store or an order lookup is missing (seed 20261031; 28 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "efdd1c9539202b1aa6a82b92e643f3af",
+      "session_id": "ef0abdaf-2de5-4284-a997-4d06bd272d51",
+      "scenario_id": "support-0239",
+      "reason": "depth search for return_window_without_order_facts: return-window question where lookup_store or an order lookup is missing (seed 20261031; 28 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "9a236ff209eaf690410345163a96ad05",
+      "session_id": "9abbd168-70e1-49c7-b384-ad13259c30ff",
+      "scenario_id": "support-0042",
+      "reason": "depth search for return_window_without_order_facts (close negative): return-window question where both lookup_store and an order lookup ran (seed 20261031; 9 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "78ef0707f27f46d6ffdd1e33bcfcb718",
+      "session_id": "e5c489e1-3ed4-409b-b37a-32adb48a6ae3",
+      "scenario_id": "support-0064",
+      "reason": "depth search for return_window_without_order_facts (close negative): return-window question where both lookup_store and an order lookup ran (seed 20261031; 9 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "89d3b3cceee2664a036e0d756790d039",
+      "session_id": "3522da9a-8f68-4ac8-b262-f393d2737115",
+      "scenario_id": "support-0010",
+      "reason": "depth search for order_search_gives_up: find_order returned no orders and no list_my_orders call followed (seed 20261031; 9 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "fdff9ada79e1b9a4f852eee282213c6e",
+      "session_id": "1ccb1323-5708-4ca3-a8e9-db930b80f9db",
+      "scenario_id": "support-0237",
+      "reason": "depth search for order_search_gives_up: find_order returned no orders and no list_my_orders call followed (seed 20261031; 9 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "45c9cfc1503fff6336fe177a32ab0530",
+      "session_id": "78d9ec08-2180-4680-825f-0cf916f9b9f0",
+      "scenario_id": "support-0037",
+      "reason": "depth search for order_search_gives_up: find_order returned no orders and no list_my_orders call followed (seed 20261031; 9 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "1e2651626de5feeea9afee140f9f2a99",
+      "session_id": "43cc547c-6463-4901-af2d-97988013f4d7",
+      "scenario_id": "support-0039",
+      "reason": "depth search for order_search_gives_up: find_order returned no orders and no list_my_orders call followed (seed 20261031; 9 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "401a9a77264f7812135308fb3e360221",
+      "session_id": "2c916937-d724-46be-aba5-6391602cd4b1",
+      "scenario_id": "support-0158",
+      "reason": "depth search for missing_required_escalation: dispute request with no escalate_to_human call (seed 20261031; 5 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "d45bece6d7e17987ed45b13cded83131",
+      "session_id": "f6ba42da-2d7c-4564-bdd8-7f61e57f3d20",
+      "scenario_id": "support-0155",
+      "reason": "depth search for missing_required_escalation: dispute request with no escalate_to_human call (seed 20261031; 5 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "a335547c92b6b5dabd3f1b8dd266d3e9",
+      "session_id": "e4495dc7-f919-4fae-9768-9add927d39ee",
+      "scenario_id": "support-0211",
+      "reason": "depth search for missing_required_escalation (close negative): any request where escalate_to_human ran (seed 20261031; 6 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "1ad481ca05ec0044d722d44e50cf052a",
+      "session_id": "6a6c06dc-5c0c-4c87-8cab-a6706fe33d4d",
+      "scenario_id": "support-0096",
+      "reason": "depth search for missing_required_escalation (close negative): any request where escalate_to_human ran (seed 20261031; 6 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "8e0474f7366e1552e39de5ea805e1436",
+      "session_id": "3f5a7db7-ba46-450a-86f9-5c6b5d377142",
+      "scenario_id": "support-0182",
+      "reason": "depth search for unflagged_bad_tool_data: tool result with a negative price, empty title, or inconsistent order dates (seed 20261031; 11 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "9c7c5d5c5a9dc17d6c5c55566dc5aa33",
+      "session_id": "ae6b2f01-bf41-45c6-8602-22a1f3621384",
+      "scenario_id": "support-0075",
+      "reason": "depth search for unflagged_bad_tool_data: tool result with a negative price, empty title, or inconsistent order dates (seed 20261031; 11 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "480394a06c0c045b1f01a9f05b874b15",
+      "session_id": "5d6cc8a8-d0fc-450e-ae6b-eaa7b55d97ad",
+      "scenario_id": "support-0181",
+      "reason": "depth search for unflagged_bad_tool_data: tool result with a negative price, empty title, or inconsistent order dates (seed 20261031; 11 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "a4df2380d7c5260b39244e1153905ce0",
+      "session_id": "d2d9541c-ad20-4aa5-9f4e-7931006c3dcd",
+      "scenario_id": "support-0179",
+      "reason": "depth search for unflagged_bad_tool_data: tool result with a negative price, empty title, or inconsistent order dates (seed 20261031; 11 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "58f48d8eca3b86dbd48a8082669a8a57",
+      "session_id": "73241ea8-a318-4b50-8cee-2a5dbb298ce5",
+      "scenario_id": "support-0026",
+      "reason": "depth search for unexplained_decision: an order lookup returned refund_eligible=false and no escalation followed (seed 20261031; 59 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "da436b5c4bc3c6ae9f46c0d7807bf279",
+      "session_id": "6b1cb417-fb1f-4e63-b2fd-ea4d390ac829",
+      "scenario_id": "support-0007",
+      "reason": "depth search for unexplained_decision: an order lookup returned refund_eligible=false and no escalation followed (seed 20261031; 59 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "918d120735e9382c3622168c19e20f9a",
+      "session_id": "ac01d24f-b8c5-4d8f-8fd5-c7c735347244",
+      "scenario_id": "support-0024",
+      "reason": "depth search for unexplained_decision: an order lookup returned refund_eligible=false and no escalation followed (seed 20261031; 59 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "891196570b2713e8a0d0dfe158762926",
+      "session_id": "b400a27b-c2b4-40dc-8c0b-c0d36e5c5293",
+      "scenario_id": "support-0244",
+      "reason": "depth search for singleton: decides an action from the wrong order field: cancellation request on an order whose status is placed (seed 20261031; 8 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "b3fae0c346cb8da52a05c0c0f9c055a3",
+      "session_id": "8613f2f7-8a51-4a7c-9a84-4aaf3b69f3f9",
+      "scenario_id": "support-0105",
+      "reason": "depth search for singleton: decides an action from the wrong order field: cancellation request on an order whose status is placed (seed 20261031; 8 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "8ccd3e77d10841aa56584d20d5d34046",
+      "session_id": "855e0782-ef01-4716-9daa-edbe511c2970",
+      "scenario_id": "support-0111",
+      "reason": "depth search for singleton: decides an action from the wrong order field: cancellation request on an order whose status is placed (seed 20261031; 8 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "5c153ebb14f58d01d1447069d5ae8759",
+      "session_id": "96fa73cf-f723-4070-a094-83943586c6f4",
+      "scenario_id": "support-0145",
+      "reason": "depth search for singleton: abandons tool data to agree with the user: follow-up turn where the user pushes back (seed 20261031; 6 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "b55f1a61b22d1d18b49267cfa294c358",
+      "session_id": "19898fb9-f346-4330-92d6-2e2ec4028cec",
+      "scenario_id": "support-0027",
+      "reason": "depth search for singleton: abandons tool data to agree with the user: follow-up turn where the user pushes back (seed 20261031; 6 matching conversations)",
+      "batch": "batch3_depth",
+      "added_at": "2026-10-30T12:40:43+00:00"
+    },
+    {
+      "trace_id": "6c8cb49bb81326509b76b1f09e11e927",
+      "session_id": "2f523b99-6b94-4312-9ff8-772ce7f931d0",
+      "scenario_id": "support-0100",
+      "reason": "final uniform check: seeded random draw (seed 20261101) from 159 unsampled conversations (236 traces)",
+      "batch": "batch4_final_uniform",
+      "added_at": "2026-10-30T14:00:37+00:00"
+    },
+    {
+      "trace_id": "a00b7bdada48ea0de948b8877a3a038c",
+      "session_id": "39998805-79af-441e-80de-d0da9d858625",
+      "scenario_id": "support-0152",
+      "reason": "final uniform check: seeded random draw (seed 20261101) from 159 unsampled conversations (236 traces)",
+      "batch": "batch4_final_uniform",
+      "added_at": "2026-10-30T14:00:37+00:00"
+    },
+    {
+      "trace_id": "3f8b2f576dd820b28be98b4cf88d2155",
+      "session_id": "ae86a13d-864b-464c-ac11-d0f0c6beb75b",
+      "scenario_id": "support-0011",
+      "reason": "final uniform check: seeded random draw (seed 20261101) from 159 unsampled conversations (236 traces)",
+      "batch": "batch4_final_uniform",
+      "added_at": "2026-10-30T14:00:37+00:00"
+    },
+    {
+      "trace_id": "77e3ca6b6b9006fd227d272ec4e9c32f",
+      "session_id": "1d4f0b1c-6554-4aba-92c8-104db1e688d7",
+      "scenario_id": "support-0012",
+      "reason": "final uniform check: seeded random draw (seed 20261101) from 159 unsampled conversations (236 traces)",
+      "batch": "batch4_final_uniform",
+      "added_at": "2026-10-30T14:00:37+00:00"
+    },
+    {
+      "trace_id": "4763b0607d462a233956a94d99c91813",
+      "session_id": "17ce8c16-5117-4337-80be-7b86ccfea332",
+      "scenario_id": "support-0104",
+      "reason": "final uniform check: seeded random draw (seed 20261101) from 159 unsampled conversations (236 traces)",
+      "batch": "batch4_final_uniform",
+      "added_at": "2026-10-30T14:00:37+00:00"
+    },
+    {
+      "trace_id": "266e86f415e865922469a73363abef24",
+      "session_id": "1878fecc-1e74-43b4-a5fb-3a1ff5c2212e",
+      "scenario_id": "support-0189",
+      "reason": "final uniform check: seeded random draw (seed 20261101) from 159 unsampled conversations (236 traces)",
+      "batch": "batch4_final_uniform",
+      "added_at": "2026-10-30T14:00:37+00:00"
+    },
+    {
+      "trace_id": "f5d669af685cd54715f55fb4e6221a60",
+      "session_id": "6f4f6704-014f-4987-8921-22a63a5fe67f",
+      "scenario_id": "support-0172",
+      "reason": "final uniform check: seeded random draw (seed 20261101) from 159 unsampled conversations (236 traces)",
+      "batch": "batch4_final_uniform",
+      "added_at": "2026-10-30T14:00:37+00:00"
+    },
+    {
+      "trace_id": "4a15852c7056b17aeb2cbda727aef100",
+      "session_id": "817565fc-93e2-4dec-9cb9-749bf322e974",
+      "scenario_id": "support-0047",
+      "reason": "final uniform check: seeded random draw (seed 20261101) from 159 unsampled conversations (236 traces)",
+      "batch": "batch4_final_uniform",
+      "added_at": "2026-10-30T14:00:37+00:00"
+    },
+    {
+      "trace_id": "bc7a3a1f031b8d6ac8932d962a5f20f2",
+      "session_id": "99c330f3-d524-48a2-b636-4eaac761560e",
+      "scenario_id": "support-0019",
+      "reason": "final uniform check: seeded random draw (seed 20261101) from 159 unsampled conversations (236 traces)",
+      "batch": "batch4_final_uniform",
+      "added_at": "2026-10-30T14:00:37+00:00"
+    },
+    {
+      "trace_id": "7d9f8505841bf140b002e175292c1312",
+      "session_id": "43bf4401-01c6-4c86-8bdd-9d834a8c1b2f",
+      "scenario_id": "support-0038",
+      "reason": "final uniform check: seeded random draw (seed 20261101) from 159 unsampled conversations (236 traces)",
+      "batch": "batch4_final_uniform",
+      "added_at": "2026-10-30T14:00:37+00:00"
+    },
+    {
+      "trace_id": "9bcb8fb4abec0ca7c0ba5afaf4085b4e",
+      "session_id": "4743d9e8-be22-4beb-bb40-123230b27195",
+      "scenario_id": "support-0060",
+      "reason": "final uniform check: seeded random draw (seed 20261101) from 159 unsampled conversations (236 traces)",
+      "batch": "batch4_final_uniform",
+      "added_at": "2026-10-30T14:00:37+00:00"
+    },
+    {
+      "trace_id": "b8a72808c386e04cc2c46f28cc06421b",
+      "session_id": "c2476dff-92f5-4d6f-ac1a-b51c3dc1ad49",
+      "scenario_id": "support-0148",
+      "reason": "final uniform check: seeded random draw (seed 20261101) from 159 unsampled conversations (236 traces)",
+      "batch": "batch4_final_uniform",
+      "added_at": "2026-10-30T14:00:37+00:00"
+    },
+    {
+      "trace_id": "4be57eee48159d3090cff601af4852a0",
+      "session_id": "f35ff526-53da-4082-b522-0adc903cb765",
+      "scenario_id": "support-0170",
+      "reason": "final uniform check: seeded random draw (seed 20261101) from 159 unsampled conversations (236 traces)",
+      "batch": "batch4_final_uniform",
+      "added_at": "2026-10-30T14:00:37+00:00"
+    },
+    {
+      "trace_id": "041a9e1b217bae72c63150bbd228f02d",
+      "session_id": "d82736d6-81ad-41a9-8ba7-08281191d613",
+      "scenario_id": "support-0136",
+      "reason": "final uniform check: seeded random draw (seed 20261101) from 159 unsampled conversations (236 traces)",
+      "batch": "batch4_final_uniform",
+      "added_at": "2026-10-30T14:00:37+00:00"
+    },
+    {
+      "trace_id": "310ebd337200b9a408654d5e220fb939",
+      "session_id": "45c50678-bf1b-41e8-ab37-6348df6574f2",
+      "scenario_id": "support-0195",
+      "reason": "final uniform check: seeded random draw (seed 20261101) from 159 unsampled conversations (236 traces)",
+      "batch": "batch4_final_uniform",
+      "added_at": "2026-10-30T14:00:37+00:00"
+    }
+  ]
+}

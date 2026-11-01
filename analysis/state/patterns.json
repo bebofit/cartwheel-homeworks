@@ -1,1 +1,1085 @@
-{"modes": []}
+{
+  "schema": "review_app.v1",
+  "modes": [
+    {
+      "name": "ungrounded_policy_answer",
+      "status": "candidate",
+      "definition": "Fail if the reply states, hedges, or withholds a fact that a Cartwheel policy determines (timing, windows, eligibility rules, shipping estimates) and no get_policy or search_help_center result in the conversation supports it.",
+      "requirement": [
+        "RESP-1",
+        "SCOPE-1"
+      ],
+      "product_change": "Retrieve and cite the relevant policy before answering a policy-dependent question.",
+      "likely_evaluator": "code check (policy tool called?) plus LLM judge (does the reply contain a policy-derived claim?)",
+      "supporting": [
+        {
+          "annotation_id": "ann-mvtj6lzp-psqqv",
+          "trace_id": "95ad8bdc58f3b0be10ebc577c54c6f0b",
+          "scenario_id": "support-0123",
+          "sampled": true,
+          "note": "Says refunds take '3 to 5 business days' with no get_policy call and no policy citation; cw-refunds says 5 to 10 business days (RESP-1)."
+        },
+        {
+          "annotation_id": "ann-mvtx6ecp-txvrq",
+          "trace_id": "fb6d461311d5ed5fd6f3d0cf1dd29cf6",
+          "scenario_id": "support-0052",
+          "sampled": false,
+          "note": "love it but dont see policy tool called"
+        },
+        {
+          "annotation_id": "ann-mvu39o4k-wg88k",
+          "trace_id": "f6f4c307d69395d0fa2126ca0650b18d",
+          "scenario_id": "support-0209",
+          "sampled": false,
+          "note": "how did it know I dont see policy tool call anywhere"
+        },
+        {
+          "annotation_id": "ann-mvv1b33w-f7t0d",
+          "trace_id": "9a236ff209eaf690410345163a96ad05",
+          "scenario_id": "support-0042",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Looked up the order and the store (no override), but hedges 'most likely 30 days' with no policy retrieved or cited, and never gives the cutoff date (July 21) the shopper asked for."
+        },
+        {
+          "annotation_id": "ann-mvv1a3sc-w2oxe",
+          "trace_id": "da436b5c4bc3c6ae9f46c0d7807bf279",
+          "scenario_id": "support-0007",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Says it can't give an ETA, but cw-shipping says delivery takes up to 7 days after shipment, so it could say by about July 8; no policy lookup."
+        },
+        {
+          "annotation_id": "ann-mvv1shwa-hqspy",
+          "trace_id": "3f8b2f576dd820b28be98b4cf88d2155",
+          "scenario_id": "support-0011",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Merchant asked three times for an arrival date; shipped June 30, and cw-shipping says up to 7 days in transit, so it could say by about July 7. No policy lookup."
+        },
+        {
+          "annotation_id": "ann-mvv1snx8-be8un",
+          "trace_id": "77e3ca6b6b9006fd227d272ec4e9c32f",
+          "scenario_id": "support-0012",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Support asked again for an arrival estimate; shipped June 28, so cw-shipping gives by about July 5. Agent sends them to the store's support instead; no policy lookup in either turn."
+        },
+        {
+          "annotation_id": "ann-mvv1tcd2-fjbde",
+          "trace_id": "041a9e1b217bae72c63150bbd228f02d",
+          "scenario_id": "support-0136",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "cw-refunds says nothing about customer actions during review; the agent presents its own inference as what the policy 'indicates'."
+        }
+      ],
+      "open_questions": [],
+      "history": [
+        {
+          "at": "2026-10-29T22:31:36+00:00",
+          "event": "proposed after Batch 1 axial coding; accepted by reviewer"
+        },
+        {
+          "at": "2026-10-30T12:27:16+00:00",
+          "event": "round 2: narrowed; a missing citation alone no longer fails",
+          "previous_definition": "Fail if the reply states, hedges, or withholds information that a Cartwheel policy determines (timing, return windows, eligibility reasons, shipping estimates) and no get_policy or search_help_center result in the conversation supports it, or the policy identifier is not cited.",
+          "previous_open_questions": [
+            "support-0209 also quotes an internal field instead of a plain reason (RESP-5); split if that recurs."
+          ]
+        },
+        {
+          "at": "2026-10-30T13:58:44+00:00",
+          "event": "round 3: widened to include withholding or hedging a policy-determined answer (0007)",
+          "previous_definition": "Fail if the reply states a fact that a Cartwheel policy determines (timing, windows, eligibility rules, shipping estimates) and no get_policy or search_help_center result in the conversation supports it."
+        },
+        {
+          "at": "2026-10-30T14:10:27+00:00",
+          "event": "round 4: Batch 4 (final uniform) evidence added"
+        },
+        {
+          "at": "2026-10-30T15:12:04+00:00",
+          "event": "finalized: close negatives from reviewed traces and boundary added"
+        }
+      ],
+      "close_negatives": [
+        {
+          "scenario_id": "support-0124",
+          "trace_id": "a75213cc62d48dae5e3aaaaafcac463b",
+          "why_not": "retrieved and cited cw-returns before stating the window"
+        },
+        {
+          "scenario_id": "support-0206",
+          "trace_id": "25480ec7475753379d14d50832fcda5e",
+          "why_not": "cited the cw-returns it retrieved (fails return_window_without_order_facts instead)"
+        },
+        {
+          "scenario_id": "support-0064",
+          "trace_id": "78ef0707f27f46d6ffdd1e33bcfcb718",
+          "why_not": "the 14-day window comes from the lookup_store result, not a policy claim"
+        }
+      ],
+      "boundary": "vs return_window_without_order_facts: a policy rule stated (or withheld) without retrieving the policy belongs here; a window verdict missing the order's delivery date or the store's window belongs there (0042 had both order facts but no policy, so it is here). vs unexplained_decision: a reason the policy doesn't support belongs here (0136); no reason at all belongs there."
+    },
+    {
+      "name": "missing_required_escalation",
+      "status": "candidate",
+      "definition": "Fail if the request is a dispute, or the agent cannot resolve it from policy and the order record, and the turn has no escalate_to_human call. A conditional offer ('let me know and I can escalate') still fails.",
+      "requirement": [
+        "ESC-3",
+        "ESC-4"
+      ],
+      "product_change": "Route disputes and unresolvable requests to escalate_to_human in the same turn.",
+      "likely_evaluator": "code check (escalate_to_human called?) gated by an LLM judge or scenario label for 'is this a dispute / unresolvable'",
+      "supporting": [
+        {
+          "annotation_id": "ann-mvuxj8d1-aw5k0",
+          "trace_id": "de0dceeca59355645546a529cc70281c",
+          "scenario_id": "support-0159",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Shopper asked to dispute the charge; agent turned it into a self-serve refund and never escalated. Disputes always go to a human."
+        },
+        {
+          "annotation_id": "ann-mvuxjg5t-bk57w",
+          "trace_id": "f7dc30fa966f4456dcccf4670e8c4c56",
+          "scenario_id": "support-0160",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Dispute (wrong item) handled as a refund offer with no escalation. The order is $169, above the auto-refund limit."
+        },
+        {
+          "annotation_id": "ann-mvuxirax-zi4ab",
+          "trace_id": "088f24cb2aa14b90344c66fc50475754",
+          "scenario_id": "support-0129",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Policy doesn't answer the minimum-balance question, but instead of escalating it sends the merchant to vague 'official announcements'; no policy id cited in this turn either."
+        },
+        {
+          "annotation_id": "ann-mvuxjmf2-vcmil",
+          "trace_id": "2a1cc81bdf3dd1ae501160a5beb39965",
+          "scenario_id": "support-0162",
+          "sampled": true,
+          "role": "secondary (primary: order_search_gives_up)",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Searched find_order with the store name instead of the product (find_order matches product descriptions) and never tried list_my_orders, then told the shopper they have no orders there. It's also a dispute that should go to a human, not 'let me know and I can escalate'."
+        },
+        {
+          "annotation_id": "ann-mvv1c3bg-uv1yy",
+          "trace_id": "401a9a77264f7812135308fb3e360221",
+          "scenario_id": "support-0158",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Shopper asked to dispute a charge for a non-delivery; agent said 'not eligible for a refund under our policy', suggested asking neighbors, and only offered escalation."
+        },
+        {
+          "annotation_id": "ann-mvv1bycg-2hjke",
+          "trace_id": "d45bece6d7e17987ed45b13cded83131",
+          "scenario_id": "support-0155",
+          "sampled": true,
+          "role": "primary (boundary: refund approval queue does not count as escalating a dispute)",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Shopper asked twice to dispute the charge; agent issued a refund instead of opening a dispute with a human."
+        },
+        {
+          "annotation_id": "ann-mvv1t3io-ujbzc",
+          "trace_id": "6c8cb49bb81326509b76b1f09e11e927",
+          "scenario_id": "support-0100",
+          "sampled": true,
+          "role": "primary (boundary: shopper says a refund never arrived; record says refunded)",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Shopper says the money never arrived; the record says refunded. The agent repeats the record and never addresses the claim (no refund date, no 5-10 day timing, no escalation for a case the order record can't settle)."
+        }
+      ],
+      "close_negatives": [
+        {
+          "scenario_id": "support-0137",
+          "trace_id": "2c983254c01788e748ae602be6dd1e15",
+          "why_not": "escalation offered when asked; nothing to escalate yet"
+        },
+        {
+          "scenario_id": "support-0215",
+          "trace_id": "24ce63f3f0a0ea11401c864427c823a9",
+          "why_not": "above-threshold refund correctly queued by issue_refund (ESC-1)"
+        },
+        {
+          "scenario_id": "support-0096",
+          "trace_id": "1ad481ca05ec0044d722d44e50cf052a",
+          "why_not": "escalated a damaged, not-eligible order"
+        },
+        {
+          "scenario_id": "support-0211",
+          "trace_id": "a335547c92b6b5dabd3f1b8dd266d3e9",
+          "why_not": "escalated (though resolvable); see singleton"
+        }
+      ],
+      "open_questions": [
+        "Account changes (0164, 0165, 0167) held in spec gap gap-account-change-route."
+      ],
+      "history": [
+        {
+          "at": "2026-10-30T12:27:16+00:00",
+          "event": "proposed in round 2; accepted with account changes moved to a spec gap"
+        },
+        {
+          "at": "2026-10-30T13:58:44+00:00",
+          "event": "round 3: Batch 3 evidence added"
+        },
+        {
+          "at": "2026-10-30T14:10:27+00:00",
+          "event": "round 4: Batch 4 (final uniform) evidence added"
+        },
+        {
+          "at": "2026-10-30T15:12:04+00:00",
+          "event": "finalized: close negatives from reviewed traces and boundary added"
+        }
+      ],
+      "boundary": "vs unexplained_decision: the case needed a human (dispute, or not resolvable from policy and the order record); a decidable denial with a missing reason belongs there (0189 is decidable: past the window)."
+    },
+    {
+      "name": "return_window_without_order_facts",
+      "status": "candidate",
+      "definition": "Fail if the reply judges whether a return is within its window without both the store's window (lookup_store or the store policy page) and the order's delivered_at from a tool, or states a window that differs from the store's.",
+      "requirement": [
+        "RESP-3",
+        "SCOPE-1"
+      ],
+      "product_change": "Before any return-window verdict, look up the order (delivered_at) and the store's override, then compute the deadline.",
+      "likely_evaluator": "code check (get_order/find_order and lookup_store called before a window verdict) plus LLM judge for 'did the reply make a window verdict'",
+      "supporting": [
+        {
+          "annotation_id": "ann-mvuxfhe4-24486",
+          "trace_id": "25480ec7475753379d14d50832fcda5e",
+          "scenario_id": "support-0206",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Quotes the 30-day platform window, but Saltbox Pantry overrides it to 7 days; never looked up the store, so it doesn't correct the shopper's 'you do 30 days, so I'm covered'."
+        },
+        {
+          "annotation_id": "ann-mvuxfrpv-kpqfo",
+          "trace_id": "a2da23174eb51eedcbad13e8c64d5038",
+          "scenario_id": "support-0210",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Concludes the window 'likely' closed from the shopper's vague '2 or 3 weeks' instead of looking up the order's delivery date; the 14-day window isn't cited."
+        },
+        {
+          "annotation_id": "ann-mvuxizi2-1k8rt",
+          "trace_id": "274ee55a9069a4b506793579a236c734",
+          "scenario_id": "support-0139",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Tells the shopper they have 'plenty of time' without knowing the delivery date; the 45-day window counts from delivery. The window isn't cited either."
+        },
+        {
+          "annotation_id": "ann-mvuxg4s0-9kgs9",
+          "trace_id": "c337a6936534a7d68d80fc1f53df6d69",
+          "scenario_id": "support-0222",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Says it's within the window using only the refund_eligible flag; no store or policy lookup and no citation, and doesn't mention that June 1 delivery means today (July 1) is day 30 of 30."
+        },
+        {
+          "annotation_id": "ann-mvtiy819-mtge0",
+          "trace_id": "7267f35adbf0081594389d46bc19874b",
+          "scenario_id": "support-0079",
+          "sampled": false,
+          "role": "context: reviewer's own statement of the rule",
+          "origin": "human",
+          "note": "we dont trust use wirds we look at delivered at and compare it not just okay week ago good"
+        },
+        {
+          "annotation_id": "ann-mvv1cgup-fcaz9",
+          "trace_id": "951895028356d7a5c8988f3721c38231",
+          "scenario_id": "support-0227",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Concludes 'likely outside' the 14-day window from the shopper's '2-3 wks' without looking up the order's delivery date."
+        },
+        {
+          "annotation_id": "ann-mvv1sxqd-h3bkh",
+          "trace_id": "4a15852c7056b17aeb2cbda727aef100",
+          "scenario_id": "support-0047",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Merchant asked 'until what date'; agent says eligible but gives no window or cutoff and offers to look up the store policy instead of doing it. Clover Field Naturals has no override, so the cutoff is July 25 (June 25 + 30)."
+        },
+        {
+          "annotation_id": "ann-mvv1t0dp-guy53",
+          "trace_id": "9bcb8fb4abec0ca7c0ba5afaf4085b4e",
+          "scenario_id": "support-0060",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Uses the shopper's 'maybe a week' instead of delivered_at June 27 from turn 1's get_order; with Saltbox's 7-day window the real deadline is July 4, three days away, not 'right at the limit'."
+        }
+      ],
+      "close_negatives": [
+        {
+          "scenario_id": "support-0064",
+          "trace_id": "78ef0707f27f46d6ffdd1e33bcfcb718",
+          "why_not": "looked up order and store, applied the 14-day override, computed July 7 correctly"
+        },
+        {
+          "scenario_id": "support-0042",
+          "trace_id": "9a236ff209eaf690410345163a96ad05",
+          "why_not": "fetched both order and store; fails ungrounded_policy_answer instead (30-day rule stated with no policy retrieved)"
+        },
+        {
+          "scenario_id": "support-0124",
+          "trace_id": "a75213cc62d48dae5e3aaaaafcac463b",
+          "why_not": "pre-purchase question; no order exists"
+        }
+      ],
+      "open_questions": [],
+      "history": [
+        {
+          "at": "2026-10-30T12:27:16+00:00",
+          "event": "proposed and accepted in round 2"
+        },
+        {
+          "at": "2026-10-30T13:58:44+00:00",
+          "event": "round 3: Batch 3 evidence added"
+        },
+        {
+          "at": "2026-10-30T14:10:27+00:00",
+          "event": "round 4: Batch 4 (final uniform) evidence added"
+        },
+        {
+          "at": "2026-10-30T15:12:04+00:00",
+          "event": "finalized: close negatives from reviewed traces and boundary added"
+        }
+      ],
+      "boundary": "vs ungrounded_policy_answer: requires a window verdict made without delivered_at from a tool or the store's window; stating the platform rule without retrieval alone belongs there."
+    },
+    {
+      "name": "unflagged_bad_tool_data",
+      "status": "candidate",
+      "definition": "Fail if a tool returns an invalid or self-contradicting value (negative price, delivered before shipped, empty title, one product listed at several prices) and the reply presents it as valid without saying so.",
+      "requirement": [
+        "RESP-3"
+      ],
+      "product_change": "Validate tool results and tell the user when data is missing or inconsistent instead of passing it through.",
+      "likely_evaluator": "code check for the invalid-value patterns in tool results, plus LLM judge for whether the reply flags them",
+      "supporting": [
+        {
+          "annotation_id": "ann-mvuxk7wq-h2nap",
+          "trace_id": "4f584755f64d2a3c41da2ba4b0679c9e",
+          "scenario_id": "support-0183",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Delivered date (June 23) is before the shipped date (June 25), and the order date is 17 months earlier; the agent repeats the dates without flagging the inconsistency."
+        },
+        {
+          "annotation_id": "ann-mvuxke27-nnkzo",
+          "trace_id": "0c43906585e2d81f7c28a93a8292d02a",
+          "scenario_id": "support-0193",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Four listings with the same title at the same store ($9 to $298) are passed on as 'options' for the customer, with no flag that the data is inconsistent; support asked for one current price."
+        },
+        {
+          "annotation_id": "ann-mvuxkk7q-7x6t6",
+          "trace_id": "ffb6a7b4b8f69f7671cede9126a20ceb",
+          "scenario_id": "support-0204",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "The only result has an empty title, so nothing confirms it's a tray; the agent asserts it is."
+        },
+        {
+          "annotation_id": "ann-mvv1cbek-08gy5",
+          "trace_id": "8e0474f7366e1552e39de5ea805e1436",
+          "scenario_id": "support-0182",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Repeats delivered (June 23) before shipped (June 25) without flagging it; support said they were already confused about the dates."
+        },
+        {
+          "annotation_id": "ann-mvv1c71h-vcqfp",
+          "trace_id": "a4df2380d7c5260b39244e1153905ce0",
+          "scenario_id": "support-0179",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Order shows status 'delivered' but delivered_at is null, and it was ordered 13 months before shipping; agent picks 'not delivered' without flagging the contradiction, then states the 30-day rule with no policy retrieved."
+        }
+      ],
+      "close_negatives": [
+        {
+          "scenario_id": "support-0197",
+          "trace_id": "889065b70b37bc15a91c885ea1d7ba65",
+          "why_not": "reply flags the -$5 price as likely an error"
+        },
+        {
+          "scenario_id": "support-0200",
+          "trace_id": "955d6d523fa639d6ad028c25ee995a92",
+          "why_not": "reply flags the -$5 price as a possible pricing error; the reviewer's 'bad data' note describes the seed data, not an agent failure"
+        },
+        {
+          "scenario_id": "support-0075",
+          "trace_id": "9c7c5d5c5a9dc17d6c5c55566dc5aa33",
+          "why_not": "inconsistent dates are in an unrelated order in the list; the reply uses the correct order"
+        }
+      ],
+      "open_questions": [],
+      "history": [
+        {
+          "at": "2026-10-30T12:27:16+00:00",
+          "event": "proposed and accepted in round 2"
+        },
+        {
+          "at": "2026-10-30T13:58:44+00:00",
+          "event": "round 3: Batch 3 evidence added"
+        },
+        {
+          "at": "2026-10-30T15:12:04+00:00",
+          "event": "finalized: close negatives from reviewed traces and boundary added"
+        }
+      ],
+      "boundary": "vs unverified_order_match: the tool returned invalid or contradictory data; when the data is fine but attached to the wrong order, it belongs there."
+    },
+    {
+      "name": "concludes_no_order_after_one_failed_search",
+      "status": "candidate",
+      "definition": "Fail if find_order returns no orders for a free-text query and the reply says or implies no order exists without trying a broader query or list_my_orders.",
+      "requirement": [
+        "RESP-3",
+        "TOOL-6"
+      ],
+      "product_change": "On an empty find_order result, retry with a broader query or fall back to list_my_orders before concluding.",
+      "likely_evaluator": "code check (empty find_order followed by no retry and a 'no orders' reply)",
+      "supporting": [
+        {
+          "annotation_id": "ann-mvu7baox-oudln",
+          "trace_id": "750754a161b5145f71314b0a6acb29c2",
+          "scenario_id": "support-0016",
+          "sampled": true,
+          "role": "primary",
+          "origin": "human",
+          "note": "find_order with 'hand cream Clover Field Naturals' returned nothing; agent concluded there's no order without a broader query or list_my_orders. Lookups by order id work; free-text names fail."
+        },
+        {
+          "annotation_id": "ann-mvuxjmf2-vcmil",
+          "trace_id": "2a1cc81bdf3dd1ae501160a5beb39965",
+          "scenario_id": "support-0162",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Searched find_order with the store name instead of the product (find_order matches product descriptions) and never tried list_my_orders, then told the shopper they have no orders there. It's also a dispute that should go to a human, not 'let me know and I can escalate'."
+        },
+        {
+          "annotation_id": "ann-mvtrqb05-96kgj",
+          "trace_id": "9113835b181eb523e946dfd6c77b6040",
+          "scenario_id": "support-0034",
+          "sampled": false,
+          "role": "context",
+          "origin": "human",
+          "note": "Agent should have done wide iteration or maybe semantic apporach here better"
+        },
+        {
+          "annotation_id": "ann-mvv1a9ne-owodb",
+          "trace_id": "89d3b3cceee2664a036e0d756790d039",
+          "scenario_id": "support-0010",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "One find_order with product plus store name returned nothing; no broader query or list_my_orders before telling the shopper there are no such orders."
+        },
+        {
+          "annotation_id": "ann-mvv1cj0e-vozmq",
+          "trace_id": "fdff9ada79e1b9a4f852eee282213c6e",
+          "scenario_id": "support-0237",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "find_order('Heavy Duty Vase') returned nothing (the catalog title is 'Heavy-Duty Vase'); no retry or list_my_orders."
+        },
+        {
+          "annotation_id": "ann-mvv1awp8-n93f3",
+          "trace_id": "45c9cfc1503fff6336fe177a32ab0530",
+          "scenario_id": "support-0037",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "One find_order('slim poetry book') returned nothing; implies no order exists without list_my_orders or a broader query."
+        },
+        {
+          "annotation_id": "ann-mvv1aysh-q3nhp",
+          "trace_id": "1e2651626de5feeea9afee140f9f2a99",
+          "scenario_id": "support-0039",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "One find_order with product plus store name returned nothing; suggests checking email instead of list_my_orders."
+        }
+      ],
+      "close_negatives": [],
+      "open_questions": [
+        "Batch 3 selector found no conversation (of 184 unsampled) where the agent recovered from an empty find_order: looks systematic."
+      ],
+      "history": [
+        {
+          "at": "2026-10-30T12:27:16+00:00",
+          "event": "proposed and accepted in round 2"
+        },
+        {
+          "at": "2026-10-30T13:58:44+00:00",
+          "event": "round 3: Batch 3 evidence added"
+        },
+        {
+          "at": "2026-10-30T15:12:04+00:00",
+          "event": "finalized: close negatives from reviewed traces and boundary added"
+        },
+        {
+          "at": "2026-10-30T16:07:25+00:00",
+          "event": "renamed from order_search_gives_up after the AgentDebug comparison; definition unchanged",
+          "previous_name": "order_search_gives_up"
+        }
+      ],
+      "boundary": "vs unverified_order_match: the search returns nothing and the agent stops; picking a record without evidence it matches belongs there.",
+      "close_negatives_note": "Data does not permit: the Batch 3 search found no conversation (of 184 unsampled) where the agent recovered from an empty find_order."
+    },
+    {
+      "name": "unexplained_decision",
+      "status": "candidate",
+      "definition": "Fail if the reply denies a request or rules on eligibility without a plain-language reason, or quotes an internal field or value instead of a reason.",
+      "requirement": [
+        "RESP-5",
+        "RESP-4"
+      ],
+      "product_change": "State the rule behind each denial in plain language (for example, the return window and the delivery date).",
+      "likely_evaluator": "LLM judge",
+      "supporting": [
+        {
+          "annotation_id": "ann-mvuxg9c5-ictf9",
+          "trace_id": "3d0b46b635db35324585b5581512cc85",
+          "scenario_id": "support-0225",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Refuses with no reason: doesn't say which rule applies (delivered May 31, 31 days ago, likely past the return window) and no policy lookup or citation."
+        },
+        {
+          "annotation_id": "ann-mvu38u9x-p5xvl",
+          "trace_id": "9dc97745dabe33d8170c91b65a35ccd0",
+          "scenario_id": "support-0209",
+          "sampled": true,
+          "role": "primary",
+          "origin": "human",
+          "note": "leaked data shouldnt be shown to user"
+        },
+        {
+          "annotation_id": "ann-mvv1cm4g-knksu",
+          "trace_id": "efdd1c9539202b1aa6a82b92e643f3af",
+          "scenario_id": "support-0239",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Says not eligible with no reason, and doesn't point out that the order was delivered Feb 8 (about 5 months ago) while the shopper said '2-3 weeks'."
+        },
+        {
+          "annotation_id": "ann-mvv1tnqo-4xb56",
+          "trace_id": "266e86f415e865922469a73363abef24",
+          "scenario_id": "support-0189",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Gives no reason for 'not eligible' (delivered April 8, 84 days ago, past the 30-day window) and says escalation is needed because it 'exceeds my automatic processing capabilities', which isn't the reason."
+        },
+        {
+          "annotation_id": "ann-mvv1sswq-idtya",
+          "trace_id": "7d9f8505841bf140b002e175292c1312",
+          "scenario_id": "support-0038",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Shopper only asked for status; the reply adds an unrequested 'not eligible for a refund' with no reason."
+        }
+      ],
+      "close_negatives": [
+        {
+          "scenario_id": "support-0026",
+          "trace_id": "58f48d8eca3b86dbd48a8082669a8a57",
+          "why_not": "no denial was made"
+        },
+        {
+          "scenario_id": "support-0104",
+          "trace_id": "4763b0607d462a233956a94d99c91813",
+          "why_not": "already-refunded order; the reason (already refunded) is stated"
+        },
+        {
+          "scenario_id": "support-0096",
+          "trace_id": "1ad481ca05ec0044d722d44e50cf052a",
+          "why_not": "states the order is not eligible and why it can't refund, then escalates"
+        }
+      ],
+      "open_questions": [],
+      "history": [
+        {
+          "at": "2026-10-30T12:27:16+00:00",
+          "event": "split out in round 2: the 0209 open question from ungrounded_policy_answer recurred in 0225"
+        },
+        {
+          "at": "2026-10-30T13:58:44+00:00",
+          "event": "round 3: Batch 3 evidence added"
+        },
+        {
+          "at": "2026-10-30T14:10:27+00:00",
+          "event": "round 4: Batch 4 (final uniform) evidence added"
+        },
+        {
+          "at": "2026-10-30T15:12:04+00:00",
+          "event": "finalized: close negatives from reviewed traces and boundary added"
+        }
+      ],
+      "boundary": "vs missing_required_escalation: the decision was the agent's to make but no plain reason was given. vs ungrounded_policy_answer: no reason at all, rather than an unsupported reason."
+    },
+    {
+      "name": "unverified_order_match",
+      "status": "candidate",
+      "definition": "Fail if the reply presents an order as the one the user asked about, or acts on it, when no tool result in the conversation shows that order's product or store matching the user's description and the order does not match a date the user stated. Listing orders for the user to choose from, or asking the user to confirm a match, is not a failure.",
+      "requirement": [
+        "RESP-3",
+        "TOOL-5"
+      ],
+      "product_change": "Include product title and store name in list_my_orders results, and require the agent to confirm the match (or ask) before answering or acting on an order.",
+      "likely_evaluator": "code check: order id named in the reply vs. product/store fields present in tool results",
+      "supporting": [
+        {
+          "annotation_id": "ann-mvv1c99h-a4h8p",
+          "trace_id": "480394a06c0c045b1f01a9f05b874b15",
+          "scenario_id": "support-0181",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Presented order 1982 as the Harbor Knits wool socks, but 1982 is a Woven Atlas from Northwind Books (store 7); the real socks order is 8001. list_my_orders returns no product names, so the match was guessed."
+        },
+        {
+          "annotation_id": "ann-mvv1ael5-72bks",
+          "trace_id": "918d120735e9382c3622168c19e20f9a",
+          "scenario_id": "support-0024",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Presented order 7681 as the Atlas Stationery sticky notes, but 7681 is a Portable Power Bank from Bright Socket Electronics; the real order is 8634 (store 20)."
+        },
+        {
+          "annotation_id": "ann-mvv1cnu0-9at7o",
+          "trace_id": "891196570b2713e8a0d0dfe158762926",
+          "scenario_id": "support-0244",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Merchant asked to cancel 'the order from this morning'; that order (6360, July 1) was already cancelled. The agent called order 105 (placed June 29) 'placed this morning' and cancelled it: a write on the wrong order."
+        },
+        {
+          "annotation_id": "ann-mvv4rs79-0ld26",
+          "trace_id": "83f32f04915ea1feb792b149880e7ed8",
+          "scenario_id": "support-0067",
+          "sampled": false,
+          "role": "context",
+          "origin": "search 1 suggestion accepted by reviewer",
+          "note": "unverified_order_match: order 7355 is presented or acted on as the user's item, and no tool result shows its product or store."
+        },
+        {
+          "annotation_id": "ann-mvv4rszy-m7yih",
+          "trace_id": "9c7c5d5c5a9dc17d6c5c55566dc5aa33",
+          "scenario_id": "support-0075",
+          "sampled": true,
+          "role": "context",
+          "origin": "search 1 suggestion accepted by reviewer (sampled no-failure trace, rechecked)",
+          "note": "unverified_order_match: order 6097 is presented or acted on as the user's item, and no tool result shows its product or store."
+        },
+        {
+          "annotation_id": "ann-mvv4ru0r-2fdnm",
+          "trace_id": "5a0d99c5551fee6bf3ee2d2bbe5698bc",
+          "scenario_id": "support-0097",
+          "sampled": true,
+          "role": "context",
+          "origin": "search 1 suggestion accepted by reviewer (sampled no-failure trace, rechecked)",
+          "note": "unverified_order_match: order 7350 is presented or acted on as the user's item, and no tool result shows its product or store."
+        },
+        {
+          "annotation_id": "ann-mvv4rw0z-far41",
+          "trace_id": "2979fb1ed5e9cc6f937dabd7ca28716b",
+          "scenario_id": "support-0177",
+          "sampled": false,
+          "role": "context",
+          "origin": "search 1 suggestion accepted by reviewer",
+          "note": "unverified_order_match: order 1496 is presented or acted on as the user's item, and no tool result shows its product or store."
+        },
+        {
+          "annotation_id": "ann-mvv4rwld-6nwue",
+          "trace_id": "64a5f27f8941bc8ec9c5d3159a99a06d",
+          "scenario_id": "support-0185",
+          "sampled": false,
+          "role": "context",
+          "origin": "search 1 suggestion accepted by reviewer",
+          "note": "unverified_order_match: order 1982 is presented or acted on as the user's item, and no tool result shows its product or store."
+        },
+        {
+          "annotation_id": "ann-mvv5w7v2-iguun",
+          "trace_id": "dc47896db5a84f2b57b202a71f35c453",
+          "scenario_id": "support-0059",
+          "sampled": false,
+          "role": "context",
+          "origin": "search 2 suggestion accepted by reviewer",
+          "note": "unverified_order_match: order 982 is presented or acted on as the user's item, and no tool result shows its product or store."
+        }
+      ],
+      "close_negatives": [
+        {
+          "scenario_id": "support-0038",
+          "trace_id": "7d9f8505841bf140b002e175292c1312",
+          "why_not": "find_order matched the query 'webcam'"
+        },
+        {
+          "scenario_id": "support-0105",
+          "trace_id": "b3fae0c346cb8da52a05c0c0f9c055a3",
+          "why_not": "get_order on the order id the user gave"
+        },
+        {
+          "scenario_id": "support-0019",
+          "trace_id": "bc7a3a1f031b8d6ac8932d962a5f20f2",
+          "why_not": "get_order on the order id the user gave; product named by the user"
+        }
+      ],
+      "open_questions": [
+        "support-0075 (Batch 3) is labelled no failure but fails this evidence rule (order 6097 picked from list_my_orders without product names; it happened to be right). Recheck its label in Part E.",
+        "Recheck earlier traces that used list_my_orders (for example support-0033) for this mode.",
+        "Search 1 decisions on support-0033 (turn 2), support-0156 (turn 2), and support-0244 (turn 2) were accepted before the revision; under the revised definition they are listing, asking to confirm, and a stated-date match. Reconcile in Part E."
+      ],
+      "history": [
+        {
+          "at": "2026-10-30T13:58:44+00:00",
+          "event": "proposed in round 3 from Batch 3; reviewer chose the evidence rule over the outcome rule"
+        },
+        {
+          "at": "2026-10-30T15:12:04+00:00",
+          "event": "finalized: close negatives from reviewed traces and boundary added"
+        },
+        {
+          "at": "2026-10-30T15:12:04+00:00",
+          "event": "requirement corrected",
+          "previous_requirement": [
+            "RESP-3",
+            "AUTH-1"
+          ]
+        },
+        {
+          "at": "2026-10-30T16:01:34+00:00",
+          "event": "revised after search 1 review",
+          "previous_definition": "Fail if the reply presents an order as the one the user asked about when no tool result in the conversation shows that order's product or store matching the user's description."
+        },
+        {
+          "change": "added search-confirmed traces as context",
+          "scenarios": [
+            "support-0059",
+            "support-0067",
+            "support-0075",
+            "support-0097",
+            "support-0177",
+            "support-0185"
+          ]
+        }
+      ],
+      "boundary": "vs concludes_no_order_after_one_failed_search: the agent asserts a match instead of stopping. vs unflagged_bad_tool_data: the record's own data is valid; the attribution is wrong."
+    }
+  ],
+  "singletons": [
+    {
+      "annotation_id": "ann-mvu7fha6-y2zwy",
+      "trace_id": "1d4f0aa361d63cb141bacd538624798d",
+      "scenario_id": "support-0112",
+      "sampled": true,
+      "role": "primary",
+      "origin": "human",
+      "note": "Refused to cancel a 'placed' order because refund_eligible=false (wrong field: that governs refunds, not cancellation; support may cancel any placed order); never called cancel_order and told support to 'contact customer support'.",
+      "label": "decides an action from the wrong order field (refund_eligible used to refuse cancellation)",
+      "close_negatives": [
+        "support-0105",
+        "support-0111"
+      ]
+    },
+    {
+      "annotation_id": "ann-mvtekko5-gx8cv",
+      "trace_id": "f65c1bce41da0177869bf6f61ce53511",
+      "scenario_id": "support-0006",
+      "sampled": true,
+      "role": "primary",
+      "origin": "human",
+      "note": "too ai slop text",
+      "label": "verbose, generic reply style"
+    },
+    {
+      "annotation_id": "ann-mvtreujl-pn7b6",
+      "trace_id": "e7d9817982a71fb4bc649ec8bad2b0a9",
+      "scenario_id": "support-0240",
+      "sampled": true,
+      "role": "primary",
+      "origin": "human",
+      "note": "same answer nearly",
+      "label": "repeats an earlier answer nearly verbatim"
+    },
+    {
+      "annotation_id": "ann-mvteinfh-tl4fg",
+      "trace_id": "775d297adae6359ab1e7a41b6961233d",
+      "scenario_id": "support-0014",
+      "sampled": true,
+      "role": "primary",
+      "origin": "human",
+      "note": "too agreable I mean tool call return data so it should be more trusted than pleasing customer",
+      "label": "abandons tool data to agree with the user",
+      "close_negatives": [
+        "support-0145",
+        "support-0027"
+      ]
+    },
+    {
+      "annotation_id": "ann-mvtj58rc-i5mwj",
+      "trace_id": "b974295764968598f2152be7f81ab8ee",
+      "scenario_id": "support-0106",
+      "sampled": true,
+      "role": "primary",
+      "origin": "human",
+      "note": "soemnthing feels off here",
+      "label": "unclear; reviewer flagged the user message"
+    },
+    {
+      "annotation_id": "ann-mvtee0u4-7j0o0",
+      "trace_id": "5c63cc61ee8a3a8d9198e7e40a910883",
+      "scenario_id": "support-0033",
+      "sampled": true,
+      "role": "primary",
+      "origin": "human",
+      "note": "just recent orders is fine",
+      "label": "reviewer remark on a narration step; may not be a failure"
+    },
+    {
+      "annotation_id": "ann-mvv1cdgv-mte8v",
+      "trace_id": "a335547c92b6b5dabd3f1b8dd266d3e9",
+      "scenario_id": "support-0211",
+      "sampled": true,
+      "role": "primary",
+      "origin": "agent draft accepted by reviewer",
+      "note": "Escalated a case it could resolve: Juniper Home Goods has a 14-day window and the order was delivered June 5 (26 days ago), but the agent never looked up the store and left support's '30 days' premise uncorrected.",
+      "label": "user's wrong policy premise not corrected (linked: support-0206 in return_window_without_order_facts)"
+    },
+    {
+      "annotation_id": "ann-mvv1tq7w-2qbsv",
+      "trace_id": "310ebd337200b9a408654d5e220fb939",
+      "scenario_id": "support-0195",
+      "sampled": true,
+      "role": "primary",
+      "origin": "agent draft accepted by reviewer",
+      "note": "Searched with limit 1 and told the merchant the price is 'confirmed', but Blue Heron has four 'Heavy-Duty Vase' listings ($9, $134.75, $281, $298), and the $9 one is described as a Sturdy Teapot.",
+      "label": "narrows a search, then asserts certainty (found in the final uniform batch)"
+    }
+  ],
+  "spec_gaps": [
+    {
+      "id": "gap-premise-verification",
+      "summary": "No requirement says to verify a user-stated premise (e.g., a claimed duplicate purchase) before a write action.",
+      "supporting": [
+        {
+          "annotation_id": "ann-mvtennw4-s3wg0",
+          "trace_id": "1b9ee6c7bd61d4daacf8389ff1be4d01",
+          "scenario_id": "support-0077",
+          "sampled": true,
+          "note": "support said bought it twice but given one order id, maybe route was to get from order id the item deatils and then another tool call to see if indeed it was acutally bought twice before issuing a refund"
+        }
+      ],
+      "status": "open: decide the desired behavior, then revise SPEC.md before any failure label",
+      "history": [
+        {
+          "at": "2026-10-29T22:31:36+00:00",
+          "event": "recorded as spec gap after Batch 1"
+        }
+      ]
+    },
+    {
+      "id": "gap-account-change-route",
+      "summary": "ESC-2 says account changes always go to a human; cw-account-security says account and payment changes happen only through account settings. The desired agent behavior is undecided.",
+      "supporting": [
+        {
+          "annotation_id": "ann-mvuxjr9l-0qqmu",
+          "trace_id": "d05ad345db5f7442c45d6fc359e87622",
+          "scenario_id": "support-0164",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Address change asked twice and never escalated; just pointed to account settings with no policy cited."
+        },
+        {
+          "annotation_id": "ann-mvuxjvdq-9821x",
+          "trace_id": "9af5c93b0ee2b1996fed8bc8de220e4a",
+          "scenario_id": "support-0165",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Password reset refused but not escalated; offers to 'guide' through a process it has no policy or tool for."
+        },
+        {
+          "annotation_id": "ann-mvuxjx4p-cuud0",
+          "trace_id": "5abfacc2e531ff419c1ebd6310ae202a",
+          "scenario_id": "support-0167",
+          "sampled": true,
+          "role": "primary",
+          "origin": "agent draft accepted by reviewer",
+          "note": "Bank-account change not escalated; the agent, which is Cartwheel support, tells the merchant to 'contact customer support' instead of opening the ticket itself."
+        }
+      ],
+      "status": "resolved for labeling",
+      "history": [
+        {
+          "at": "2026-10-30T12:27:16+00:00",
+          "event": "recorded as spec gap in round 2"
+        },
+        {
+          "status": "open: decide the desired behavior, then revise SPEC.md or the policy before any failure label",
+          "changed_at": "2026-10-30T16:49:07+00:00"
+        },
+        {
+          "status": "resolved for labeling",
+          "decision": "ESC-2 wins: an account-change request that is not escalated counts as missing_required_escalation. Pointing to account settings alone does not satisfy ESC-2.",
+          "changed_at": "2026-10-30T21:00:12+00:00"
+        }
+      ],
+      "decision": "cw-account-security wins: pointing the user to account settings is correct, so an unescalated account-change request is not missing_required_escalation. ESC-2's wording conflicts and needs a SPEC revision."
+    }
+  ],
+  "not_accepted": [
+    {
+      "name": "contradicts_earlier_order_result",
+      "definition": "Fail if the agent says it cannot find an order when an earlier tool result in the same conversation already returned a matching order.",
+      "evidence": "context turns only (support-0033 turn 2, support-0034 turn 2)",
+      "decision": "not accepted after Batch 1",
+      "at": "2026-10-29T22:31:36+00:00"
+    }
+  ],
+  "rounds": [
+    {
+      "round": 1,
+      "after": "Batch 1",
+      "at": "2026-10-29T22:31:36+00:00"
+    },
+    {
+      "round": 2,
+      "after": "Batches 1-2",
+      "at": "2026-10-30T12:27:16+00:00",
+      "note": "21 of 30 Batch 2 judgments were agent drafts accepted unchanged by the reviewer"
+    },
+    {
+      "round": 3,
+      "after": "Batches 1-3",
+      "at": "2026-10-30T13:58:44+00:00",
+      "note": "all 25 Batch 3 judgments were agent drafts accepted unchanged (46 of 46 across Batches 2-3)"
+    },
+    {
+      "round": 4,
+      "after": "Batches 1-4 (100 sampled traces)",
+      "at": "2026-10-30T14:10:27+00:00",
+      "note": "all 15 Batch 4 judgments were agent drafts accepted unchanged (61 of 61 across Batches 2-4)",
+      "stability": "final 15: 9 with failures; 8 fit existing modes; 1 (support-0195) was a previously unseen failure, kept as a singleton; 0 new modes"
+    }
+  ],
+  "searches": [
+    {
+      "run": 1,
+      "mode": "unverified_order_match",
+      "at": "2026-10-30T16:01:34+00:00",
+      "rule": "list_my_orders ran; the reply names, or a later tool call acts on, one of its orders; the user never gave that order id; no find_order result returned it.",
+      "script": "analysis/review_app/search_unverified_match.py --run 1",
+      "hits": 11,
+      "new_suggestions": 9,
+      "accepted": 8,
+      "rejected": 1,
+      "rejected_example": {
+        "scenario_id": "support-0018",
+        "boundary": "listing orders and asking which one is not presenting an order as the user's item"
+      },
+      "recall_gap": "missed support-0024 (reply described order 7681 by its dates without naming the id)",
+      "rechecks": "support-0075 and support-0097 were sampled no-failure traces; both accepted, replacing the no-failure mark (kept in history)"
+    },
+    {
+      "run": 2,
+      "mode": "unverified_order_match",
+      "at": "2026-10-30T16:03:58+00:00",
+      "rule": "As run 1, plus replies that describe an order by its date or total; skips replies that list several orders or ask the user to choose or confirm; skips orders matching a same-day date the user stated.",
+      "reason": "Rerun after revising the definition following search 1 review.",
+      "script": "analysis/review_app/search_unverified_match.py --run 2",
+      "hits": 9,
+      "new_suggestions": 1,
+      "accepted": 1,
+      "rejected": 0,
+      "new_positive": "support-0059 (order 982 named as the user's Slim Crewneck; no tool result showed the product)",
+      "recall_gain": "recovered support-0024, missed by run 1",
+      "excluded_by_revision": [
+        "support-0018",
+        "support-0033",
+        "support-0156",
+        "support-0244 turn 2"
+      ],
+      "filter_fix": "narrowed the 'asks to confirm' pattern after it dropped true positive support-0177 ('please confirm the amount')"
+    }
+  ],
+  "agentdebug_comparison": {
+    "at": "2026-10-30T16:07:25+00:00",
+    "source": "https://arxiv.org/abs/2509.25370 (AgentErrorTaxonomy, Table 2)",
+    "mapping": {
+      "ungrounded_policy_answer": "Memory: Hallucination; Memory: Retrieval Failure",
+      "missing_required_escalation": "Planning: Constraint Ignorance",
+      "return_window_without_order_facts": "Memory: Retrieval Failure; Planning: Constraint Ignorance",
+      "unflagged_bad_tool_data": "System: Tool Execution Error (the data) + Reflection: Outcome Misinterpretation (passing it on)",
+      "concludes_no_order_after_one_failed_search": "Action: Parameter Error + Reflection: Progress Misassessment",
+      "unexplained_decision": "no counterpart; AgentDebug has no user-communication category",
+      "unverified_order_match": "Memory: Hallucination (fills missing gaps with fabricated info)"
+    },
+    "unclear_name": {
+      "mode": "concludes_no_order_after_one_failed_search",
+      "previous_name": "order_search_gives_up",
+      "finding": "the old name described the symptom; positives combine a bad query (0162, 0237, 0010, 0039) with no retry, and the definition tests the shared part",
+      "decision": "renamed, not split"
+    },
+    "possible_omission": {
+      "category": "Reflection: Outcome Misinterpretation",
+      "traces": [
+        "support-0112",
+        "support-0014",
+        "support-0195"
+      ],
+      "decision": "kept as singletons (different product changes); watch item for future batches",
+      "weak_candidate": "Planning: Impossible Action, only support-0165"
+    },
+    "not_observed": [
+      "Format Error",
+      "Step Limit Exhaustion",
+      "LLM Limit",
+      "Environment Error",
+      "Causal Misattribution",
+      "Inefficient Planning",
+      "Planning-Action Disconnect"
+    ],
+    "modes_added": 0
+  }
+}

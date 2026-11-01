@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cartwheel review</title>
+<style>
+  :root {
+    --ink: #1f2328; --muted: #6b7280; --line: #e5e7eb; --bg: #f8fafc;
+    --user: #2563eb; --agent: #059669; --tool: #d97706; --retrieval: #0d9488;
+    --note: #f59e0b; --note-bg: #fef3c7; --ok: #15803d; --warn: #b45309; --err: #b91c1c;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--ink); background: var(--bg); }
+  header { position: sticky; top: 0; z-index: 5; display: flex; gap: 16px; align-items: center; padding: 8px 16px; background: #fff; border-bottom: 1px solid var(--line); }
+  header h1 { font-size: 15px; margin: 0; }
+  header .src { font-size: 12px; color: var(--muted); }
+  header .src.fallback { color: var(--err); }
+  header .count { margin-left: auto; font-size: 12px; color: var(--muted); }
+  #layout { display: flex; height: calc(100vh - 45px); }
+  aside { width: 260px; flex: none; overflow-y: auto; border-right: 1px solid var(--line); background: #fff; }
+  aside input { width: calc(100% - 16px); margin: 8px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; }
+  .conv-row { padding: 6px 12px; cursor: pointer; border-left: 3px solid transparent; font-size: 13px; }
+  .conv-row:hover { background: var(--bg); }
+  .conv-row.active { background: #eef2ff; border-left-color: var(--user); }
+  .conv-row .sub { font-size: 11px; color: var(--muted); }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; background: #d1d5db; }
+  .dot.partial { background: var(--note); } .dot.done { background: var(--ok); }
+  main { flex: 1; overflow-y: auto; padding: 16px 24px 120px; }
+  #conv-header { max-width: 980px; margin-bottom: 16px; }
+  #conv-header .title { font-size: 16px; font-weight: 600; }
+  .chip { display: inline-block; font-size: 11px; padding: 1px 8px; margin: 2px 4px 2px 0; border-radius: 10px; background: #f1f5f9; color: var(--muted); }
+  .chip.role { background: #eef2ff; color: var(--user); }
+  button { font: inherit; font-size: 12px; padding: 3px 10px; border: 1px solid var(--line); border-radius: 6px; background: #fff; cursor: pointer; }
+  button:hover { border-color: #9ca3af; }
+  button:disabled { opacity: 0.4; cursor: default; }
+  .nav-row { display: flex; gap: 6px; margin-top: 8px; align-items: center; }
+  .keys { font-size: 11px; color: var(--muted); margin-left: 8px; }
+  #intent { margin-top: 8px; padding: 8px 12px; border: 1px dashed #9ca3af; border-radius: 6px; font-size: 12px; background: #fff; white-space: pre-wrap; font-family: ui-monospace, Menlo, monospace; }
+  details.sys { max-width: 720px; margin-bottom: 24px; font-size: 12px; color: var(--muted); }
+  details.sys pre { white-space: pre-wrap; background: #fff; border: 1px solid var(--line); padding: 8px; border-radius: 6px; }
+  #content { display: flex; gap: 16px; max-width: 980px; }
+  #body { flex: 1; max-width: 720px; min-width: 0; }
+  #margin { position: relative; width: 240px; flex: none; }
+  .turn { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; margin-bottom: 40px; }
+  .turn-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 12px; color: var(--muted); padding-bottom: 8px; margin-bottom: 10px; border-bottom: 1px solid var(--line); }
+  .turn-head .num { font-weight: 600; color: var(--ink); font-size: 13px; }
+  .turn-head code { font-size: 11px; }
+  .turn-head .spacer { flex: 1; }
+  .pill { font-size: 11px; padding: 1px 8px; border-radius: 10px; background: #f1f5f9; }
+  .pill.notes { background: var(--note-bg); color: var(--warn); }
+  .pill.clean { background: #dcfce7; color: var(--ok); }
+  .msg { border-left: 4px solid var(--line); padding: 4px 10px; margin: 6px 0; }
+  .msg .role { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; }
+  .msg[data-role=user] { border-color: var(--user); } .msg[data-role=user] .role { color: var(--user); }
+  .msg[data-role=agent], .msg[data-role=narration] { border-color: var(--agent); }
+  .msg[data-role=agent] .role, .msg[data-role=narration] .role { color: var(--agent); }
+  .msg[data-role=narration] { background: #f0fdf4; }
+  .msg[data-role=narration] .text { font-style: italic; }
+  .msg[data-role=agent] { background: #f0fdf4; border-left-width: 6px; }
+  .text { white-space: pre-wrap; }
+  .toolbox { border: 1px solid #fde68a; border-left: 4px solid var(--tool); border-radius: 6px; padding: 6px 10px; margin: 6px 0; background: #fffbeb; }
+  .toolbox.retrieval { border-color: #99f6e4; border-left-color: var(--retrieval); background: #f0fdfa; }
+  .toolbox .fn { font-family: ui-monospace, Menlo, monospace; font-weight: 600; }
+  .badge { font-size: 11px; padding: 1px 8px; border-radius: 10px; margin-left: 8px; font-family: ui-monospace, Menlo, monospace; }
+  .badge.ok { background: #dcfce7; color: var(--ok); } .badge.warn { background: #ffedd5; color: var(--warn); }
+  .badge.error { background: #fee2e2; color: var(--err); } .badge.neutral { background: #f1f5f9; color: var(--muted); }
+  .args-inline { font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: var(--muted); }
+  details.result summary { cursor: pointer; font-size: 12px; color: var(--muted); }
+  pre.json { white-space: pre-wrap; word-break: break-word; font-size: 12px; margin: 4px 0; padding: 6px 8px; background: #fff; border: 1px solid var(--line); border-radius: 4px; }
+  .hits { font-size: 12px; margin: 4px 0; padding-left: 18px; }
+  .hits code { font-size: 11px; }
+  mark.hl { background: var(--note-bg); border-bottom: 2px solid var(--note); padding: 0; }
+  mark.hl.hover, .mnote.hover { outline: 2px solid var(--note); }
+  mark.pending { background: #c7d2fe; }
+  .mnote { position: absolute; left: 0; width: 240px; font-size: 12px; background: #fff; border: 1px solid var(--line); border-left: 3px solid var(--note); border-radius: 6px; padding: 6px 8px; box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+  .mnote .q { color: var(--muted); font-style: italic; margin-bottom: 4px; }
+  .mnote .acts { display: none; gap: 4px; margin-top: 4px; }
+  .mnote:hover .acts { display: flex; }
+  .mnote .edited { font-size: 10px; color: var(--muted); }
+  #popover { position: fixed; z-index: 10; width: 320px; background: #fff; border: 1px solid #9ca3af; border-radius: 8px; padding: 8px; box-shadow: 0 6px 20px rgba(0,0,0,.15); }
+  #popover .q { font-size: 12px; color: var(--muted); font-style: italic; max-height: 60px; overflow: hidden; margin-bottom: 6px; }
+  #popover textarea { width: 100%; height: 70px; font: inherit; padding: 6px; border: 1px solid var(--line); border-radius: 6px; }
+  #popover small { color: var(--muted); }
+  nav { display: flex; gap: 4px; }
+  .tab.active { background: #eef2ff; border-color: var(--user); color: var(--user); }
+  .toggle { display: block; font-size: 11px; color: var(--muted); padding: 0 12px 6px; }
+  .batch-head { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); padding: 10px 12px 4px; border-top: 1px solid var(--line); }
+  .chip.batch { background: #ede9fe; color: #6d28d9; }
+  .chip.context { background: #f1f5f9; color: var(--muted); font-style: italic; }
+  .turn.context { opacity: .75; }
+  #progress, #taxonomy, #labels { height: calc(100vh - 45px); overflow-y: auto; padding: 16px 24px; }
+  #labels { max-width: 1100px; font-size: 13px; }
+  #labels h2 { font-size: 15px; margin: 18px 0 6px; }
+  #labels table { border-collapse: collapse; background: #fff; margin: 6px 0 14px; }
+  #labels th, #labels td { border: 1px solid var(--line); padding: 4px 10px; text-align: left; vertical-align: top; }
+  #labels a[data-sid] { cursor: pointer; color: var(--user); font-family: ui-monospace, Menlo, monospace; font-size: 12px; }
+  #labels .flag { color: var(--muted); font-size: 12px; }
+  #labels .mono { font-family: ui-monospace, Menlo, monospace; font-size: 12px; }
+  #labels .on { font-weight: 700; outline: 2px solid var(--user); }
+  #taxonomy { max-width: 980px; }
+  #taxonomy h2 { font-size: 15px; margin: 20px 0 6px; }
+  .mode { background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--user); border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 13px; }
+  .mode.gap { border-left-color: var(--warn); } .mode.single { border-left-color: var(--muted); }
+  .mode h3 { margin: 0 0 4px; font-size: 14px; font-family: ui-monospace, Menlo, monospace; }
+  .mode .def { margin: 4px 0 8px; }
+  .mode dl { display: grid; grid-template-columns: 130px 1fr; gap: 2px 10px; margin: 0 0 8px; font-size: 12px; }
+  .mode dt { color: var(--muted); }
+  .mode ul { margin: 2px 0 6px; padding-left: 18px; }
+  .mode li { margin: 2px 0; }
+  .mode a[data-sid] { cursor: pointer; color: var(--user); font-family: ui-monospace, Menlo, monospace; font-size: 12px; }
+  .mode .tag { font-size: 10px; padding: 0 6px; border-radius: 8px; background: #f1f5f9; color: var(--muted); margin-left: 4px; }
+  .mode .tag.agent { background: #ede9fe; color: #6d28d9; }
+  .mode details summary { cursor: pointer; font-size: 12px; color: var(--muted); }
+  #progress table { border-collapse: collapse; margin: 8px 0 24px; font-size: 13px; background: #fff; }
+  #progress th, #progress td { border: 1px solid var(--line); padding: 4px 10px; text-align: left; }
+  #progress h2 { font-size: 15px; margin: 16px 0 4px; }
+  #progress .todo a { cursor: pointer; color: var(--user); margin-right: 8px; font-family: ui-monospace, Menlo, monospace; font-size: 12px; }
+  #tip { position: fixed; z-index: 20; max-width: 320px; font-size: 12px; background: #111827; color: #fff; padding: 6px 10px; border-radius: 6px; pointer-events: none; white-space: pre-wrap; }
+  .sugg { border: 1px dashed #a78bfa; background: #faf5ff; border-radius: 6px; padding: 8px 10px; margin-bottom: 10px; font-size: 13px; }
+  .sugg .lbl { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: #6d28d9; }
+  .sugg .q { color: var(--muted); font-style: italic; margin: 4px 0; }
+  .sugg .why { color: var(--muted); font-size: 12px; margin-top: 4px; }
+  .sugg .acts { display: flex; gap: 6px; margin-top: 6px; }
+  .sugg.decided { border-style: solid; border-color: var(--line); background: #fff; padding: 4px 10px; font-size: 12px; color: var(--muted); }
+  .mnote .origin, .pill.draft { font-size: 10px; color: #6d28d9; }
+  .pill.draft { background: #ede9fe; font-size: 11px; }
+  .turn-notes:empty { display: none; }
+  .turn-notes { margin-bottom: 8px; }
+  #toast { position: fixed; bottom: 16px; right: 16px; background: #111827; color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 13px; display: none; }
+  .empty { color: var(--muted); padding: 40px; }
+  @media (max-width: 1200px) {
+    aside { width: 200px; }
+    #margin, .mnote { width: 190px; }
+    main { padding: 12px 12px 120px; }
+  }
+  @media (max-width: 900px) {
+    aside { width: 160px; }
+    #content { flex-direction: column; }
+    #margin { width: 100%; }
+    .mnote { position: static; width: auto; margin-bottom: 8px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Cartwheel review</h1>
+  <nav><button class="tab active" data-view="review">Review</button><button class="tab" data-view="progress">Progress</button><button class="tab" data-view="taxonomy">Taxonomy</button><button class="tab" data-view="labels">Labels</button></nav>
+  <span id="src" class="src"></span>
+  <span id="count" class="count"></span>
+</header>
+<div id="layout">
+  <aside>
+    <input id="filter" placeholder="Filter by scenario, role, or tool">
+    <label id="all-toggle" class="toggle" hidden><input type="checkbox" id="show-all"> show conversations outside the sample</label>
+    <div id="list"></div>
+  </aside>
+  <main id="main">
+    <div id="conv-header"></div>
+    <details class="sys" id="sys" hidden><summary>System prompt for this conversation (collapsed)</summary><pre id="sys-text"></pre></details>
+    <div id="content"><div id="body"><div class="empty">Choose a conversation.</div></div><div id="margin"></div></div>
+  </main>
+</div>
+<div id="progress" hidden></div>
+<div id="taxonomy" hidden></div>
+<div id="labels" hidden></div>
+<div id="popover" hidden>
+  <div class="q"></div>
+  <textarea placeholder="Describe what went wrong, in your own words"></textarea>
+  <small>Enter saves · Shift+Enter new line · Esc cancels</small>
+</div>
+<div id="tip" hidden></div>
+<div id="toast"></div>
+
+<script>
+const state = { meta: {}, list: [], conv: null, annotations: [], suggestions: [], pending: null, showIntent: false, manifest: { items: [], excluded: [], batches: {} } };
+const $ = id => document.getElementById(id);
+
+const api = {
+  async get(path) { const r = await fetch(path); return r.json(); },
+  async post(path, body) {
+    const r = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (!r.ok) throw new Error((await r.json()).error || r.statusText);
+    return r.json();
+  },
+};
+
+function esc(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function clip(s, n) { s = String(s || ''); return s.length > n ? s.slice(0, n) + '…' : s; }
+function pretty(v) { return typeof v === 'string' ? v : JSON.stringify(v, null, 2); }
+function uid() { return 'ann-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7); }
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.style.display = 'block'; clearTimeout(t._h); t._h = setTimeout(() => t.style.display = 'none', 2500); }
+
+/* ---------- annotations ---------- */
+const active = a => (a.status || 'active') === 'active';
+function annsFor(traceId) { return state.annotations.filter(a => a.trace_id === traceId && active(a)); }
+function traceStatus(traceId) {
+  const anns = annsFor(traceId);
+  if (anns.some(a => a.kind === 'note')) return 'notes';
+  if (anns.some(a => a.kind === 'no_failure')) return 'clean';
+  return 'unreviewed';
+}
+async function save() {
+  localStorage.setItem('review_app_backup', JSON.stringify(state.annotations));
+  try { state.annotations = await api.post('/api/annotations', state.annotations); }
+  catch (e) { toast('Save failed: ' + e.message + ' (backup kept in this browser)'); }
+  renderList(); renderCount();
+}
+async function addNote(fields) {
+  const conv = state.conv;
+  for (const a of annsFor(fields.trace_id)) if (a.kind === 'no_failure') a.status = 'deleted';
+  state.annotations.push({ id: uid(), kind: 'note', session_id: conv.session_id, scenario_id: conv.scenario_id, status: 'active', ...fields });
+  await save(); renderConv();
+}
+async function toggleNoFailure(traceId) {
+  const existing = annsFor(traceId).find(a => a.kind === 'no_failure');
+  if (existing) existing.status = 'deleted';
+  else state.annotations.push({ id: uid(), kind: 'no_failure', session_id: state.conv.session_id, scenario_id: state.conv.scenario_id, trace_id: traceId, note: 'no failure observed', status: 'active' });
+  await save(); renderConv();
+}
+async function editNote(id) {
+  const a = state.annotations.find(x => x.id === id);
+  const next = prompt('Edit note (the original text is kept in history):', a.note);
+  if (next === null || next.trim() === a.note) return;
+  a.note = next.trim(); await save(); renderConv();
+}
+async function deleteNote(id) {
+  if (!confirm('Delete this note? It stays in the saved history as deleted.')) return;
+  state.annotations.find(x => x.id === id).status = 'deleted';
+  await save(); renderConv();
+}
+
+/* ---------- agent suggestions (kept apart from human annotations) ---------- */
+function suggsFor(traceId) { return state.suggestions.filter(s => s.trace_id === traceId); }
+const pendingSugg = traceId => suggsFor(traceId).find(s => (s.status || 'pending') === 'pending');
+async function decide(id, status, extra = {}) {
+  try { state.suggestions = await api.post('/api/suggestions/decide', { id, status, ...extra }); }
+  catch (e) { toast('Decision not saved: ' + e.message); }
+}
+async function acceptSuggestion(id, edit) {
+  const s = state.suggestions.find(x => x.id === id);
+  if (s.kind === 'no_failure') {
+    if (traceStatus(s.trace_id) === 'notes') { toast('This trace already has your notes; reject the draft or delete your notes first'); return false; }
+    if (traceStatus(s.trace_id) !== 'clean') {
+      state.annotations.push({ id: uid(), kind: 'no_failure', session_id: s.session_id, scenario_id: s.scenario_id, trace_id: s.trace_id, note: 'no failure observed', status: 'active', origin: 'agent_suggestion', suggestion_id: s.id });
+    }
+    await save(); await decide(id, 'accepted');
+  } else {
+    const note = edit ? prompt('Edit the draft before accepting it (the draft text is kept on the suggestion):', s.note) : s.note;
+    if (note === null || !note.trim()) return false;
+    let start = 0, end = 0;
+    if (s.field !== 'turn') {
+      const el = fieldEl(s.trace_id, s.field);
+      start = el ? el.textContent.indexOf(s.quote) : -1;
+      if (start < 0) { toast('Quoted text not found in this turn; use Edit or Reject'); return false; }
+      end = start + s.quote.length;
+    }
+    for (const a of annsFor(s.trace_id)) if (a.kind === 'no_failure') a.status = 'deleted';
+    state.annotations.push({ id: uid(), kind: 'note', session_id: s.session_id, scenario_id: s.scenario_id, trace_id: s.trace_id, field: s.field, start, end, quote: s.quote || '', note: note.trim(), status: 'active', origin: 'agent_suggestion', suggestion_id: s.id });
+    await save();
+    await decide(id, note.trim() === s.note ? 'accepted' : 'edited', { final_note: note.trim() });
+  }
+  renderConv(); renderCount();
+  return true;
+}
+async function rejectSuggestion(id) {
+  const reason = prompt('Reject this draft. Why? (optional, saved with the suggestion)', '');
+  if (reason === null) return false;
+  await decide(id, 'rejected', { reason: reason.trim() || null });
+  renderConv();
+  return true;
+}
+function renderSuggestions(t) {
+  return suggsFor(t.trace_id).map(s => {
+    const st = s.status || 'pending';
+    if (st !== 'pending') {
+      return `<div class="sugg decided">Agent draft ${esc(st)}${s.reason ? ': ' + esc(s.reason) : ''} · “${esc(clip(s.kind === 'no_failure' ? 'No failure observed' : s.note, 90))}”</div>`;
+    }
+    const what = s.kind === 'no_failure' ? '<div><b>No failure observed</b></div>'
+      : `${s.field === 'turn' ? '<div class="q">(whole turn)</div>' : `<div class="q">on ${esc(s.field)}: “${esc(clip(s.quote, 140))}”</div>`}<div>${esc(s.note)}</div>`;
+    const lbl = s.source === 'search'
+      ? `Search ${esc(s.search_run)} suggestion for ${esc(s.mode)}: a retrieval signal, not a label. Accept only if the mode applies.`
+      : 'Agent draft, not your annotation until you accept it';
+    return `<div class="sugg"><div class="lbl">${lbl}</div>${what}
+      ${s.evidence ? `<div class="why">Evidence: ${esc(s.evidence)}</div>` : ''}
+      <div class="acts"><button data-act="sugg-accept" data-sugg="${esc(s.id)}">Accept (a)</button>
+      ${s.kind === 'no_failure' ? '' : `<button data-act="sugg-edit" data-sugg="${esc(s.id)}">Edit, then accept</button>`}
+      <button data-act="sugg-reject" data-sugg="${esc(s.id)}">Reject (r)</button></div></div>`;
+  }).join('');
+}
+
+/* ---------- list ---------- */
+/* ---------- sample manifest ---------- */
+const hasSample = () => state.manifest.items.length > 0;
+function sampleItem(traceId) { return state.manifest.items.find(i => i.trace_id === traceId); }
+function convBatch(c) { const i = state.manifest.items.find(i => i.session_id === c.session_id); return i ? i.batch : null; }
+function sampleTraces() { return hasSample() ? state.manifest.items.map(i => i.trace_id) : state.list.flatMap(c => c.trace_ids); }
+function batchLabel(key) { return (state.manifest.batches[key] || {}).label || key; }
+
+function renderList() {
+  const q = $('filter').value.trim().toLowerCase();
+  const showAll = !hasSample() || $('show-all').checked;
+  $('all-toggle').hidden = !hasSample();
+  const rows = state.list.filter(c => (showAll || convBatch(c)) && (!q || [c.scenario_id, c.role, ...c.tools].join(' ').toLowerCase().includes(q)));
+  const row = c => {
+    const ids = hasSample() && convBatch(c) ? c.trace_ids.filter(sampleItem) : c.trace_ids;
+    const done = ids.filter(t => traceStatus(t) !== 'unreviewed').length;
+    const cls = done === 0 ? '' : done === ids.length ? 'done' : 'partial';
+    return `<div class="conv-row ${state.conv && state.conv.session_id === c.session_id ? 'active' : ''}" data-id="${esc(c.session_id)}">
+      <span class="dot ${cls}"></span>${esc(c.scenario_id)} <span class="chip role">${esc(c.role)}</span>
+      <div class="sub">${done}/${ids.length} traces reviewed · ${esc(c.tools.join(', ') || 'no tools')}</div></div>`;
+  };
+  if (!hasSample()) { $('list').innerHTML = rows.map(row).join(''); return; }
+  const groups = [...Object.keys(state.manifest.batches), null];
+  $('list').innerHTML = groups.map(key => {
+    const members = rows.filter(c => convBatch(c) === key);
+    if (!members.length) return '';
+    return `<div class="batch-head">${esc(key ? batchLabel(key) : 'Outside the sample')}</div>` + members.map(row).join('');
+  }).join('');
+}
+function renderCount() {
+  const ids = sampleTraces();
+  const done = ids.filter(t => traceStatus(t) !== 'unreviewed').length;
+  $('count').textContent = `${done} / ${ids.length} ${hasSample() ? 'sampled ' : ''}traces reviewed`;
+}
+
+/* ---------- progress view ---------- */
+function renderProgress() {
+  const m = state.manifest;
+  const rows = Object.entries(m.batches).map(([key, b]) => {
+    const items = m.items.filter(i => i.batch === key);
+    const reviewed = items.filter(i => traceStatus(i.trace_id) !== 'unreviewed');
+    const notes = items.filter(i => traceStatus(i.trace_id) === 'notes').length;
+    return `<tr><td>${esc(b.label)}</td><td>${b.target}</td><td>${items.length}</td><td>${reviewed.length}</td><td>${notes}</td><td>${reviewed.length - notes}</td></tr>`;
+  }).join('');
+  const all = m.items;
+  const reviewed = all.filter(i => traceStatus(i.trace_id) !== 'unreviewed').length;
+  const distinct = new Set(all.map(i => i.trace_id)).size;
+  const todo = all.filter(i => traceStatus(i.trace_id) === 'unreviewed');
+  const partial = state.list.filter(c => {
+    const ids = c.trace_ids.filter(sampleItem);
+    const done = ids.filter(t => traceStatus(t) !== 'unreviewed').length;
+    return done > 0 && done < ids.length;
+  });
+  const link = (sid, label) => `<a data-sid="${esc(sid)}">${esc(label)}</a>`;
+  $('progress').innerHTML = `
+    <h2>Review set</h2>
+    <div>${distinct} distinct traces sampled (target at least 100) · ${reviewed} reviewed · ${m.excluded.length} scenarios excluded</div>
+    <table><tr><th>Batch</th><th>Target</th><th>Selected</th><th>Reviewed</th><th>With notes</th><th>No failure observed</th></tr>${rows}</table>
+    <h2>Conversations partly reviewed (${partial.length})</h2>
+    <div class="todo">${partial.map(c => link(c.session_id, c.scenario_id)).join('') || 'None.'}</div>
+    <h2>Unreviewed sampled traces (${todo.length})</h2>
+    <div class="todo">${todo.map(i => link(i.session_id, `${i.scenario_id} · ${i.trace_id.slice(0, 8)}`)).join('') || 'None.'}</div>
+    <h2>Excluded scenarios</h2>
+    <div>${m.excluded.map(e => `${esc(e.scenario_id)} (${esc(e.reason)})`).join(', ') || 'None.'}</div>
+    <h2>Suggestions</h2>
+    ${[['Agent drafts', x => x.source !== 'search'], ['Search suggestions', x => x.source === 'search']].map(([label, f]) => {
+      const xs = state.suggestions.filter(f);
+      return `<div>${label}: ${['pending', 'accepted', 'edited', 'rejected'].map(s => `${s} ${xs.filter(x => (x.status || 'pending') === s).length}`).join(' · ')}</div>`;
+    }).join('')}
+    <div class="todo">${state.suggestions.filter(x => (x.status || 'pending') === 'pending').map(x => link(x.session_id, `${x.scenario_id} · ${x.source === 'search' ? 'search ' + x.search_run : 'draft'}`)).join('') || 'No pending suggestions.'}</div>
+    <h2>Structured labels</h2>
+    <div>Present-or-absent judgments per trace and final mode become available once the taxonomy exists (Part E).</div>`;
+  $('progress').querySelectorAll('a[data-sid]').forEach(a => a.onclick = () => { switchView('review'); openConv(a.dataset.sid); });
+}
+/* ---------- taxonomy view (read-only view of patterns.json) ---------- */
+async function renderTaxonomy() {
+  const p = await api.get('/api/patterns');
+  const sid = sc => (state.list.find(c => c.scenario_id === sc) || {}).session_id || '';
+  const link = sc => `<a data-sid="${esc(sid(sc))}">${esc(sc)}</a>`;
+  const ref = r => `<li>${link(r.scenario_id)}${r.sampled === false ? '<span class="tag">context</span>' : ''}
+    ${r.origin && r.origin !== 'human' ? '<span class="tag agent">agent draft, accepted</span>' : r.origin ? '<span class="tag">human</span>' : ''}
+    ${r.role && r.role !== 'primary' ? `<span class="tag">${esc(r.role)}</span>` : ''}${r.label ? ` <b>${esc(r.label)}</b>` : ''}
+    <div>${esc(r.note || '')}</div></li>`;
+  const list = (title, items, fn) => items && items.length ? `<div><b>${title}</b><ul>${items.map(fn).join('')}</ul></div>` : '';
+  const hist = h => h && h.length ? `<details><summary>history (${h.length})</summary><pre class="json">${esc(JSON.stringify(h, null, 2))}</pre></details>` : '';
+  const mode = m => `<div class="mode"><h3>${esc(m.name)} <span class="tag">${esc(m.status || '')}</span></h3>
+    <div class="def">${esc(m.definition)}</div>
+    <dl><dt>Requirement</dt><dd>${esc((m.requirement || []).join(', '))}</dd>
+      <dt>Product change</dt><dd>${esc(m.product_change || '')}</dd>
+      <dt>Likely evaluator</dt><dd>${esc(m.likely_evaluator || '')}</dd>
+      ${m.boundary ? `<dt>Boundary</dt><dd>${esc(m.boundary)}</dd>` : ''}
+      ${m.close_negatives_note ? `<dt>Close negatives</dt><dd>${esc(m.close_negatives_note)}</dd>` : ''}</dl>
+    ${list(`Supporting annotations (${(m.supporting || []).length})`, m.supporting, ref)}
+    ${list('Close negatives', m.close_negatives, n => `<li>${link(n.scenario_id)} ${esc(n.why_not)}</li>`)}
+    ${list('Open questions', m.open_questions, q => `<li>${esc(q)}</li>`)}${hist(m.history)}</div>`;
+  const gap = g => `<div class="mode gap"><h3>${esc(g.id)}</h3><div class="def">${esc(g.summary)}</div>
+    <div><b>Status:</b> ${esc(g.status)}</div>${list('Supporting annotations', g.supporting, ref)}${hist(g.history)}</div>`;
+  $('taxonomy').innerHTML = `
+    <div>Source: <code>analysis/state/patterns.json</code> (read-only here) · ${(p.rounds || []).map(r => `round ${r.round} after ${esc(r.after)}${r.note ? ' (' + esc(r.note) + ')' : ''}`).join(' · ')}</div>
+    <h2>Candidate failure modes (${(p.modes || []).length})</h2>${(p.modes || []).map(mode).join('') || 'None yet.'}
+    <h2>Singletons (${(p.singletons || []).length})</h2><div class="mode single"><ul>${(p.singletons || []).map(ref).join('')}</ul></div>
+    <h2>Spec gaps (${(p.spec_gaps || []).length})</h2>${(p.spec_gaps || []).map(gap).join('')}
+    <h2>Not accepted</h2>${(p.not_accepted || []).map(n => `<div class="mode single"><h3>${esc(n.name)}</h3><div class="def">${esc(n.definition)}</div><div>${esc(n.decision)}: ${esc(n.evidence)}</div></div>`).join('') || 'None.'}`;
+  $('taxonomy').querySelectorAll('a[data-sid]').forEach(a => a.onclick = () => { if (a.dataset.sid) { switchView('review'); openConv(a.dataset.sid); } });
+}
+/* ---------- labels view (Part E: present/absent per sampled trace and final mode) ---------- */
+async function renderLabels() {
+  const data = await api.get('/api/labels');
+  const ds = data.drafts || [];
+  if (!ds.length) { $('labels').innerHTML = '<div>No label drafts yet. Run <code>analysis.review_app.draft_labels --write</code>.</div>'; return; }
+  const n = new Set(ds.map(d => d.trace_id)).size;
+  const link = d => `<a data-sid="${esc(d.session_id)}">${esc(d.scenario_id)}</a> <span class="mono">t${d.turn}</span>`;
+  const val = d => d.decision ? d.decision.label : null;
+  const rows = (data.modes || []).map(m => {
+    const xs = ds.filter(d => d.mode === m), dec = xs.filter(d => d.decision);
+    const pres = dec.filter(d => d.decision.label === 1).length;
+    return `<tr><td class="mono">${esc(m)}</td><td>${pres} of ${dec.length} decided${dec.length ? ` (${(100 * pres / dec.length).toFixed(0)}%)` : ''}</td>
+      <td>${xs.filter(d => d.draft).length}</td><td>${xs.filter(d => d.flags.length && !d.decision).length}</td></tr>`;
+  }).join('');
+  const flagged = ds.filter(d => d.flags.length || (d.decision && d.decision.how !== 'confirmed unflagged draft in bulk'));
+  const pair = d => `<tr><td>${link(d)}</td><td class="mono">${esc(d.mode)}</td><td>${d.draft ? 'present' : 'absent'}</td>
+    <td>${d.flags.map(f => `<div class="flag">${esc(f)}</div>`).join('')}<div class="flag">basis: ${esc(d.basis)}</div>
+      ${d.decision ? `<div class="flag">decided: ${esc(d.decision.how)}${d.decision.note ? ' · ' + esc(d.decision.note) : ''}</div>` : ''}</td>
+    <td style="white-space:nowrap"><button data-lbl="1" data-t="${d.trace_id}" data-m="${esc(d.mode)}" class="${val(d) === 1 ? 'on' : ''}">Present</button>
+      <button data-lbl="0" data-t="${d.trace_id}" data-m="${esc(d.mode)}" class="${val(d) === 0 ? 'on' : ''}">Absent</button></td></tr>`;
+  const open = ds.filter(d => d.flags.length && !d.decision).length;
+  const rest = ds.filter(d => !d.flags.length && !d.decision).length;
+  $('labels').innerHTML = `
+    <div>Source: <code>analysis/state/label_drafts.json</code>. A draft is not a label until you decide it. Counts are <b>sample fractions</b> over the ${n} reviewed traces, not prevalence.</div>
+    <h2>Per mode</h2>
+    <table><tr><th>Mode</th><th>Present (your decisions)</th><th>Drafted present</th><th>Flagged, undecided</th></tr>${rows}</table>
+    <h2>Pairs that need your call (${open} open)</h2>
+    <table><tr><th>Trace</th><th>Mode</th><th>Draft</th><th>Why it is flagged</th><th>Your label</th></tr>${flagged.map(pair).join('')}</table>
+    <h2>Unflagged drafts</h2>
+    <div>${rest} undecided drafts with no flag; each was drafted from your accepted annotations (present) or their absence (absent).</div>
+    <button id="confirm-rest" ${rest ? '' : 'disabled'}>Confirm the ${rest} unflagged drafts as drafted</button>`;
+  $('labels').querySelectorAll('a[data-sid]').forEach(a => a.onclick = () => { switchView('review'); openConv(a.dataset.sid); });
+  $('labels').querySelectorAll('button[data-lbl]').forEach(b => b.onclick = async () => {
+    const note = prompt('Optional note for this label (Enter to skip):') || null;
+    try { await api.post('/api/labels/decide', { trace_id: b.dataset.t, mode: b.dataset.m, label: +b.dataset.lbl, note }); renderLabels(); }
+    catch (e) { toast('Not saved: ' + e.message); }
+  });
+  const c = $('confirm-rest');
+  if (c) c.onclick = async () => {
+    if (!confirm(`Accept ${rest} unflagged drafts as your labels?`)) return;
+    try { await api.post('/api/labels/decide', { confirm_unflagged: true }); renderLabels(); }
+    catch (e) { toast('Not saved: ' + e.message); }
+  };
+}
+function switchView(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.view === name));
+  $('layout').hidden = name !== 'review';
+  $('progress').hidden = name !== 'progress';
+  $('taxonomy').hidden = name !== 'taxonomy';
+  $('labels').hidden = name !== 'labels';
+  if (name === 'progress') renderProgress();
+  if (name === 'taxonomy') renderTaxonomy();
+  if (name === 'labels') renderLabels();
+}
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => switchView(t.dataset.view));
+$('show-all').addEventListener('change', renderList);
+async function openConv(sessionId) {
+  state.conv = await api.get('/api/conversation?id=' + encodeURIComponent(sessionId));
+  state.showIntent = false;
+  renderList(); renderConv();
+  $('main').scrollTop = 0;
+  const t = sampledTurn();
+  if (t && state.conv.turns.indexOf(t) > 0) {
+    document.querySelector(`.turn[data-trace="${CSS.escape(t.trace_id)}"]`).scrollIntoView({ block: 'start' });
+  }
+}
+
+/* ---------- conversation ---------- */
+function renderHeader() {
+  const c = state.conv;
+  const intent = Object.keys(c.scenario_intent || {}).length
+    ? `<button id="intent-btn">${state.showIntent ? 'Hide' : 'Show'} scenario intent</button>` : '';
+  $('conv-header').innerHTML = `
+    <div class="title">${esc(c.scenario_id)} <span class="chip role">${esc(c.role)}</span></div>
+    <div><span class="chip">user ${esc(c.user_id)}</span><span class="chip">${c.turns.length} turn${c.turns.length > 1 ? 's' : ''}</span>
+    ${c.tools.map(t => `<span class="chip">${esc(t)}</span>`).join('')}<span class="chip">prompt ${esc(c.prompt_version)}</span>
+    <span class="chip">session ${esc(c.session_id.slice(0, 8))}</span> ${intent}</div>
+    <div class="nav-row"><button id="prev-btn">← Previous</button><button id="next-btn">Next unreviewed →</button>
+      <button id="sugg-btn">Next pending suggestion (${state.suggestions.filter(s => (s.status || 'pending') === 'pending').length})</button>
+      <span class="keys">keys: <b>a</b>/<b>r</b> accept/reject suggestion + next · <b>s</b> next suggestion · <b>f</b> no failure + next · <b>n</b> note on sampled turn · <b>j</b>/<b>k</b> next/previous</span></div>
+    ${state.showIntent ? `<div id="intent">${esc(pretty(c.scenario_intent))}</div>` : ''}`;
+  const b = $('intent-btn');
+  if (b) b.onclick = () => { state.showIntent = !state.showIntent; renderConv(); };
+  $('prev-btn').onclick = () => step(-1);
+  $('next-btn').onclick = nextUnreviewed;
+  $('sugg-btn').onclick = nextPendingSuggestion;
+  $('sys').hidden = !c.system_prompt;
+  $('sys-text').textContent = c.system_prompt || '';
+}
+
+function block(role, label, field, text) {
+  return `<div class="msg" data-role="${role}"><div class="role">${label}</div><div class="text annotatable" data-field="${field}">${esc(text)}</div></div>`;
+}
+function toolBox(step, k) {
+  const r = step.result || {};
+  const json = pretty(step.result);
+  const hits = step.name === 'search_help_center' && Array.isArray(r.results)
+    ? `<ul class="hits">${r.results.map(h => `<li><code>${esc(h.policy_id)}</code> ${esc(h.title || '')} <span class="args-inline">score ${esc(h.score)}</span></li>`).join('')}</ul>` : '';
+  const open = json.length <= 400 ? 'open' : '';
+  return `<div class="toolbox ${step.retrieval ? 'retrieval' : ''}">
+    <div><span class="fn">${esc(step.name)}</span>(<span class="args-inline annotatable" data-field="args-${k}">${esc(JSON.stringify(step.arguments))}</span>)
+    <span class="badge ${step.badge.tone}">${esc(step.badge.text)}</span></div>${hits}
+    <details class="result" ${open}><summary>result (${json.length} chars)</summary><pre class="json annotatable" data-field="result-${k}">${esc(json)}</pre></details></div>`;
+}
+function renderTurn(t, i, n) {
+  const status = traceStatus(t.trace_id);
+  const pill = { notes: '<span class="pill notes">has notes</span>', clean: '<span class="pill clean">no failure observed</span>', unreviewed: '<span class="pill">unreviewed</span>' }[status]
+    + (pendingSugg(t.trace_id) ? '<span class="pill draft">agent draft pending</span>' : '');
+  const link = state.meta.langfuse_trace_base ? `<a href="${esc(state.meta.langfuse_trace_base + t.trace_id)}" target="_blank">Langfuse</a>` : '';
+  const steps = t.steps.map((s, k) => s.kind === 'tool' ? toolBox(s, k) : block('narration', 'Agent (in-between)', `step-${k}`, s.text)).join('');
+  const item = sampleItem(t.trace_id);
+  const context = hasSample() && !item;
+  const tag = item ? `<span class="chip batch" title="${esc(item.reason)}">${esc(batchLabel(item.batch))}</span>`
+    : context ? '<span class="chip context">context only, not in the sample</span>' : '';
+  return `<section class="turn ${context ? 'context' : ''}" data-trace="${esc(t.trace_id)}">
+    <div class="turn-head" data-field="turn"><span class="num">Turn ${i + 1} of ${n}</span><code>trace ${esc(t.trace_id.slice(0, 8))}</code>${link}${tag}${pill}
+      <span class="spacer"></span>
+      <button data-act="turn-note">Note on this turn</button>
+      <button data-act="no-failure" ${status === 'notes' ? 'disabled title="This turn has notes"' : ''}>${status === 'clean' ? 'Undo no failure' : 'No failure observed'}</button></div>
+    ${renderSuggestions(t)}
+    <div class="turn-notes"></div>
+    ${block('user', 'User', 'user', t.user)}${steps}${block('agent', 'Agent reply (final)', 'final', t.final)}</section>`;
+}
+function renderConv() {
+  const c = state.conv;
+  if (!c) return;
+  renderHeader();
+  $('body').innerHTML = c.turns.map((t, i) => renderTurn(t, i, c.turns.length)).join('');
+  applyHighlights();
+  layoutMargin();
+}
+
+/* ---------- highlights ---------- */
+function fieldEl(traceId, field) {
+  return document.querySelector(`.turn[data-trace="${CSS.escape(traceId)}"] [data-field="${CSS.escape(field)}"]`);
+}
+function wrapOffsets(el, start, end, cls, id) {
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  const targets = []; let pos = 0, node;
+  while ((node = walker.nextNode())) {
+    const len = node.nodeValue.length, s = Math.max(start, pos), e = Math.min(end, pos + len);
+    if (s < e) targets.push([node, s - pos, e - pos]);
+    pos += len;
+  }
+  for (const [n0, s, e] of targets) {
+    let n = n0;
+    if (s > 0) n = n.splitText(s);
+    if (e - s < n.nodeValue.length) n.splitText(e - s);
+    const mark = document.createElement('mark');
+    mark.className = cls; if (id) mark.dataset.ann = id;
+    n.parentNode.insertBefore(mark, n); mark.appendChild(n);
+  }
+}
+function applyHighlights() {
+  for (const t of state.conv.turns) {
+    for (const a of annsFor(t.trace_id)) {
+      if (a.kind !== 'note' || a.field === 'turn') continue;
+      const el = fieldEl(a.trace_id, a.field);
+      if (!el) continue;
+      let { start, end } = a;
+      if (el.textContent.slice(start, end) !== a.quote) {
+        const at = el.textContent.indexOf(a.quote);
+        if (at < 0) continue;
+        start = at; end = at + a.quote.length;
+      }
+      const d = el.closest('details'); if (d) d.open = true;
+      wrapOffsets(el, start, end, 'hl', a.id);
+    }
+  }
+}
+function layoutMargin() {
+  const margin = $('margin'); margin.innerHTML = '';
+  document.querySelectorAll('.turn-notes').forEach(el => { el.innerHTML = ''; });
+  $('tip').hidden = true;
+  const top0 = margin.getBoundingClientRect().top;
+  const items = [];
+  for (const t of state.conv.turns) {
+    for (const a of annsFor(t.trace_id)) {
+      if (a.kind !== 'note') continue;
+      const anchor = a.field === 'turn'
+        ? document.querySelector(`.turn[data-trace="${CSS.escape(a.trace_id)}"] .turn-head`)
+        : document.querySelector(`mark.hl[data-ann="${CSS.escape(a.id)}"]`);
+      if (anchor) items.push({ a, top: anchor.getBoundingClientRect().top - top0 });
+    }
+  }
+  items.sort((x, y) => x.top - y.top);
+  const narrow = window.innerWidth <= 900;
+  let floor = 0;
+  for (const { a, top } of items) {
+    const div = document.createElement('div');
+    div.className = 'mnote'; div.dataset.ann = a.id;
+    div.innerHTML = `${a.field === 'turn' ? '<div class="q">(whole turn)</div>' : `<div class="q">“${esc(clip(a.quote, 80))}”</div>`}
+      <div>${esc(a.note)}</div>${(a.history || []).some(h => 'note' in h) ? '<div class="edited">edited · original kept</div>' : ''}
+      ${a.origin === 'agent_suggestion' ? '<div class="origin">agent draft, accepted by you</div>' : ''}
+      <div class="acts"><button data-act="edit">Edit</button><button data-act="delete">Delete</button></div>`;
+    if (narrow) {
+      document.querySelector(`.turn[data-trace="${CSS.escape(a.trace_id)}"] .turn-notes`).appendChild(div);
+    } else {
+      div.style.top = Math.max(top, floor) + 'px';
+      margin.appendChild(div);
+      floor = Math.max(top, floor) + div.offsetHeight + 8;
+    }
+    div.querySelector('[data-act=edit]').onclick = () => editNote(a.id);
+    div.querySelector('[data-act=delete]').onclick = () => deleteNote(a.id);
+    div.onmouseenter = () => hover(a.id, true); div.onmouseleave = () => hover(a.id, false);
+  }
+  margin.style.minHeight = narrow ? '0' : floor + 'px';
+}
+function hover(id, on) {
+  document.querySelectorAll(`[data-ann="${CSS.escape(id)}"]`).forEach(el => el.classList.toggle('hover', on));
+}
+
+/* ---------- selecting text and the note popover ---------- */
+function offsetIn(el, node, off) { const r = document.createRange(); r.setStart(el, 0); r.setEnd(node, off); return r.toString().length; }
+function openPopover(pending, rect) {
+  state.pending = pending;
+  const p = $('popover');
+  p.querySelector('.q').textContent = pending.field === 'turn' ? '(whole turn: use this for something missing, such as an escalation that never happened)' : '“' + clip(pending.quote, 200) + '”';
+  const main = $('main').getBoundingClientRect();
+  p.style.top = Math.min(rect.bottom + 6, window.innerHeight - 160) + 'px';
+  p.style.left = Math.max(8, Math.min(rect.left, main.right - 340)) + 'px';
+  p.hidden = false;
+  const ta = p.querySelector('textarea'); ta.value = ''; ta.focus();
+}
+function closePopover() {
+  $('popover').hidden = true; state.pending = null;
+  document.querySelectorAll('mark.pending').forEach(m => {
+    const parent = m.parentNode; m.replaceWith(...m.childNodes); parent.normalize();
+  });
+}
+$('body').addEventListener('mouseup', e => {
+  if (e.target.closest('button, summary, a')) return;
+  const sel = window.getSelection();
+  if (!sel || sel.isCollapsed) return;
+  const range = sel.getRangeAt(0);
+  const startEl = (range.startContainer.nodeType === 3 ? range.startContainer.parentElement : range.startContainer).closest('.annotatable');
+  const endEl = (range.endContainer.nodeType === 3 ? range.endContainer.parentElement : range.endContainer).closest('.annotatable');
+  if (!startEl || startEl !== endEl) { toast('Select text within a single block'); return; }
+  const start = offsetIn(startEl, range.startContainer, range.startOffset);
+  const end = offsetIn(startEl, range.endContainer, range.endOffset);
+  const quote = startEl.textContent.slice(start, end);
+  if (!quote.trim()) return;
+  const rect = range.getBoundingClientRect();
+  const traceId = startEl.closest('.turn').dataset.trace;
+  sel.removeAllRanges();
+  wrapOffsets(startEl, start, end, 'pending');
+  openPopover({ trace_id: traceId, field: startEl.dataset.field, start, end, quote }, rect);
+});
+$('body').addEventListener('click', e => {
+  const btn = e.target.closest('button[data-act]');
+  if (!btn) return;
+  const traceId = btn.closest('.turn').dataset.trace;
+  if (btn.dataset.act === 'sugg-accept') acceptSuggestion(btn.dataset.sugg, false);
+  if (btn.dataset.act === 'sugg-edit') acceptSuggestion(btn.dataset.sugg, true);
+  if (btn.dataset.act === 'sugg-reject') rejectSuggestion(btn.dataset.sugg);
+  if (btn.dataset.act === 'no-failure') toggleNoFailure(traceId);
+  if (btn.dataset.act === 'turn-note') openPopover({ trace_id: traceId, field: 'turn', quote: '' }, btn.getBoundingClientRect());
+});
+$('body').addEventListener('mouseover', e => {
+  const m = e.target.closest('mark.hl');
+  if (!m) return;
+  hover(m.dataset.ann, true);
+  const a = state.annotations.find(x => x.id === m.dataset.ann);
+  if (!a) return;
+  const tip = $('tip'), r = m.getBoundingClientRect();
+  tip.textContent = a.note; tip.hidden = false;
+  tip.style.left = Math.max(8, Math.min(r.left, window.innerWidth - 330)) + 'px';
+  tip.style.top = (r.bottom + 6 + 60 > window.innerHeight ? r.top - tip.offsetHeight - 6 : r.bottom + 6) + 'px';
+});
+$('body').addEventListener('mouseout', e => {
+  const m = e.target.closest('mark.hl');
+  if (m) { hover(m.dataset.ann, false); $('tip').hidden = true; }
+});
+$('popover').querySelector('textarea').addEventListener('keydown', async e => {
+  if (e.key === 'Escape') { closePopover(); return; }
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    const note = e.target.value.trim();
+    if (!note) return;
+    const pending = state.pending;
+    $('popover').hidden = true; state.pending = null;
+    await addNote({ ...pending, note });
+  }
+});
+document.addEventListener('mousedown', e => {
+  if (!$('popover').hidden && !e.target.closest('#popover')) closePopover();
+});
+function visibleIds() { return [...document.querySelectorAll('.conv-row')].map(r => r.dataset.id); }
+function step(delta) {
+  const ids = visibleIds();
+  const at = state.conv ? ids.indexOf(state.conv.session_id) : -1;
+  const next = ids[Math.min(ids.length - 1, Math.max(0, at + delta))];
+  if (next && next !== (state.conv && state.conv.session_id)) openConv(next);
+}
+function nextUnreviewed() {
+  const ids = visibleIds();
+  const at = state.conv ? ids.indexOf(state.conv.session_id) : -1;
+  const pending = id => {
+    const c = state.list.find(x => x.session_id === id);
+    const traces = hasSample() ? c.trace_ids.filter(sampleItem) : c.trace_ids;
+    return traces.some(t => traceStatus(t) === 'unreviewed');
+  };
+  const order = [...ids.slice(at + 1), ...ids.slice(0, at + 1)];
+  const next = order.find(pending);
+  if (next) openConv(next); else toast('Every trace in this list has been reviewed');
+}
+function nextPendingSuggestion() {
+  const pending = state.suggestions.filter(s => (s.status || 'pending') === 'pending');
+  if (!pending.length) { toast('No pending suggestions'); return; }
+  const at = pending.findIndex(s => state.conv && s.session_id === state.conv.session_id);
+  const next = pending.find((s, i) => i > at && (!state.conv || s.session_id !== state.conv.session_id)) || pending[0];
+  openConv(next.session_id);
+}
+function sampledTurn() {
+  if (!state.conv) return null;
+  const withSugg = state.conv.turns.find(t => pendingSugg(t.trace_id));
+  if (withSugg) return withSugg;
+  const turns = state.conv.turns.filter(t => !hasSample() || sampleItem(t.trace_id));
+  return turns.find(t => traceStatus(t.trace_id) === 'unreviewed') || turns[0] || null;
+}
+async function markCleanAndNext() {
+  const t = sampledTurn();
+  if (!t) return;
+  if (traceStatus(t.trace_id) === 'notes') { toast('This trace has notes; not marking it clean'); return; }
+  if (traceStatus(t.trace_id) === 'unreviewed') await toggleNoFailure(t.trace_id);
+  nextUnreviewed();
+}
+function noteOnSampledTurn() {
+  const t = sampledTurn();
+  if (!t) return;
+  const head = document.querySelector(`.turn[data-trace="${CSS.escape(t.trace_id)}"] .turn-head`);
+  head.scrollIntoView({ block: 'center' });
+  openPopover({ trace_id: t.trace_id, field: 'turn', quote: '' }, head.getBoundingClientRect());
+}
+document.addEventListener('keydown', e => {
+  if (e.target.matches('input, textarea') || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === 'j') step(1);
+  if (e.key === 'k') step(-1);
+  if (e.key === 'f') markCleanAndNext();
+  if (e.key === 'n') { e.preventDefault(); noteOnSampledTurn(); }
+  if (e.key === 'a' || e.key === 'r') {
+    const t = sampledTurn(), s = t && pendingSugg(t.trace_id);
+    if (!s) { toast('No pending agent draft on the sampled turn'); return; }
+    (e.key === 'a' ? acceptSuggestion(s.id, false) : rejectSuggestion(s.id))
+      .then(done => done && (s.source === 'search' ? nextPendingSuggestion() : nextUnreviewed()));
+  }
+  if (e.key === 's') nextPendingSuggestion();
+});
+$('list').addEventListener('click', e => { const r = e.target.closest('.conv-row'); if (r) openConv(r.dataset.id); });
+$('filter').addEventListener('input', renderList);
+window.addEventListener('resize', () => state.conv && layoutMargin());
+
+(async function boot() {
+  [state.meta, state.list, state.annotations, state.manifest, state.suggestions] = await Promise.all([api.get('/api/meta'), api.get('/api/conversations'), api.get('/api/annotations'), api.get('/api/manifest'), api.get('/api/suggestions')]);
+  $('src').textContent = 'Source: ' + state.meta.source;
+  if (state.meta.source.startsWith('Export')) $('src').classList.add('fallback');
+  renderList(); renderCount();
+  const first = hasSample() ? state.list.find(convBatch) : state.list[0];
+  if (first) openConv(first.session_id);
+  setInterval(async () => {
+    const meta = await api.get('/api/meta').catch(() => null);
+    if (meta && meta.instance !== state.meta.instance) {
+      if ($('popover').hidden) location.reload();
+      return;
+    }
+    const next = await api.get('/api/manifest');
+    if (next.items.length !== state.manifest.items.length) {
+      state.manifest = next; renderList(); renderCount();
+      if (state.conv) renderConv();
+      if (!$('progress').hidden) renderProgress();
+      toast('Sample updated');
+    }
+    const suggs = await api.get('/api/suggestions');
+    if (JSON.stringify(suggs) !== JSON.stringify(state.suggestions) && $('popover').hidden) {
+      state.suggestions = suggs;
+      if (state.conv) renderConv();
+    }
+  }, 15000);
+})();
+</script>
+</body>
+</html>

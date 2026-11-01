@@ -70,11 +70,11 @@ services:
     restart: always
     depends_on: *langfuse-depends-on
     ports:
-      - "3000:3000"
+      - "3002:3000"
     environment:
       <<: *langfuse-shared-env
       # NEXTAUTH_URL must match the URL you open in the browser.
-      NEXTAUTH_URL: http://localhost:3000
+      NEXTAUTH_URL: http://localhost:3002
       NEXTAUTH_SECRET: cartwheel-dev-nextauth-secret
       # Pre-provision the org, project, API keys, and login on first boot.
       # The keys match .env.example.
