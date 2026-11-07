@@ -1,0 +1,25 @@
+{
+  "judge_id": "ungrounded_policy_answer-v3",
+  "split": "dev",
+  "tpr": 1.0,
+  "tnr": 1.0,
+  "tpr_interval": [
+    0.8985,
+    1.0
+  ],
+  "tnr_interval": [
+    0.8064,
+    1.0
+  ],
+  "agreement": 1.0,
+  "tp": 34,
+  "fn": 0,
+  "tn": 16,
+  "fp": 0,
+  "n": 50,
+  "disagreements": [],
+  "class_counts": {
+    "pass": 34,
+    "fail": 16
+  }
+}

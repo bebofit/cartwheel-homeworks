@@ -1,0 +1,40 @@
+{
+  "judge_id": "ungrounded_policy_answer-v3",
+  "split": "test",
+  "tpr": 0.7838,
+  "tnr": 0.5385,
+  "tpr_interval": [
+    0.628,
+    0.8861
+  ],
+  "tnr_interval": [
+    0.2914,
+    0.7679
+  ],
+  "agreement": 0.72,
+  "tp": 29,
+  "fn": 8,
+  "tn": 7,
+  "fp": 6,
+  "n": 50,
+  "disagreements": [
+    "1bb3b347431c914719e9aeb10a2ad370",
+    "20b5dbdd92b32f0cb6903602e73074ae",
+    "274ee55a9069a4b506793579a236c734",
+    "4763b0607d462a233956a94d99c91813",
+    "4776fc0f7b3315f6429856a2c37f5cf1",
+    "4c4177976955fa6b9d5042d2b48b4626",
+    "5664ad59f619ab26b71a0cb430a904d8",
+    "7ebcebe672dafdf852d9d0c8b64764ef",
+    "9dc97745dabe33d8170c91b65a35ccd0",
+    "a4df2380d7c5260b39244e1153905ce0",
+    "c3ec8e7eca279d078947618a15a5e97d",
+    "cbf91d5009828db844a7b9fee403f9ab",
+    "e7d9817982a71fb4bc649ec8bad2b0a9",
+    "e861a5f4452919c24a89f50eda015618"
+  ],
+  "class_counts": {
+    "pass": 37,
+    "fail": 13
+  }
+}
