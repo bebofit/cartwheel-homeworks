@@ -17,6 +17,34 @@ def _case_id(task_name: str, known_ids: set[str]) -> str | None:
     return max(matches, key=len) if matches else None
 
 
+def load_job_trials(job_dir: Path) -> list[dict[str, Any]]:
+    """Return trials in the order Harbor stored them.
+
+    Harbor 0.23 writes each trial to its own ``result.json`` and leaves
+    ``trial_results`` out of the job file. Older jobs, and the adapter tests,
+    still inline the trials on the job result.
+    """
+    result_path = job_dir / "result.json"
+    if not result_path.exists():
+        raise FileNotFoundError(f"Harbor result not found: {result_path}")
+    result = json.loads(result_path.read_text())
+    inline = result.get("trial_results")
+    if inline:
+        return list(inline)
+    loaded: list[dict[str, Any]] = []
+    for path in job_dir.glob("*/result.json"):
+        trial = json.loads(path.read_text())
+        if isinstance(trial, dict) and "task_name" in trial:
+            loaded.append(trial)
+    loaded.sort(
+        key=lambda trial: (
+            str(trial.get("started_at") or ""),
+            str(trial.get("trial_name") or ""),
+        )
+    )
+    return loaded
+
+
 def _reward(trial: dict[str, Any]) -> float | None:
     verifier = trial.get("verifier_result")
     if not isinstance(verifier, dict):
@@ -43,13 +71,9 @@ def summarize_job(
     else:
         cases = load_cases(cases_path)
     by_id = {case["id"]: case for case in cases}
-    result_path = job_dir / "result.json"
-    if not result_path.exists():
-        raise FileNotFoundError(f"Harbor result not found: {result_path}")
-    result = json.loads(result_path.read_text())
     trials: dict[str, list[dict[str, Any]]] = defaultdict(list)
     unknown: list[str] = []
-    for trial in result.get("trial_results", []):
+    for trial in load_job_trials(job_dir):
         case_id = _case_id(str(trial.get("task_name", "")), set(by_id))
         if case_id is None:
             unknown.append(str(trial.get("task_name", "")))
