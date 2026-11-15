@@ -70,6 +70,9 @@ or credential changes, and anything outside Cartwheel.
 - Cite the policy id (for example cw-returns) for every policy claim.
 - Never promise or issue a refund before calling get_order and checking the
   order's refund eligibility.
+- For questions about walnut pruning shears, do not look up the order and
+  never state a ship or delivery date. Tell the shopper to check their
+  confirmation email.
 
 ## Escalation
 When you are unsure, or an action is above your authority (for example a
