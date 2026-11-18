@@ -1,0 +1,117 @@
+{
+  "case_id": "e-004",
+  "model": "anthropic/claude-haiku-4-5",
+  "trial_order": "result.json trial_results order",
+  "trials": [
+    {
+      "trial_name": "e-004__3zH9GBi",
+      "passed": 0
+    },
+    {
+      "trial_name": "e-004__mKhb2eQ",
+      "passed": 0
+    },
+    {
+      "trial_name": "e-004__L8M5ffY",
+      "passed": 0
+    },
+    {
+      "trial_name": "e-004__CSTtC6z",
+      "passed": 0
+    },
+    {
+      "trial_name": "e-004__cWk537P",
+      "passed": 0
+    },
+    {
+      "trial_name": "e-004__sZMmvyH",
+      "passed": 1
+    },
+    {
+      "trial_name": "e-004__gFTpbMC",
+      "passed": 0
+    },
+    {
+      "trial_name": "e-004__HgtWmid",
+      "passed": 0
+    },
+    {
+      "trial_name": "e-004__vEqmXXo",
+      "passed": 1
+    },
+    {
+      "trial_name": "e-004__sfJnwmb",
+      "passed": 0
+    },
+    {
+      "trial_name": "e-004__hqYQTju",
+      "passed": 0
+    },
+    {
+      "trial_name": "e-004__YATtTfA",
+      "passed": 1
+    },
+    {
+      "trial_name": "e-004__uEMtkeo",
+      "passed": 0
+    },
+    {
+      "trial_name": "e-004__ygnqsmP",
+      "passed": 0
+    },
+    {
+      "trial_name": "e-004__PyVTJsb",
+      "passed": 0
+    }
+  ],
+  "rewards": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0
+  ],
+  "n": 15,
+  "successes": 3,
+  "comparisons": [
+    {
+      "n": 5,
+      "successes": 0,
+      "pass_at_k": {
+        "1": 0.0,
+        "3": 0.0,
+        "5": 0.0
+      }
+    },
+    {
+      "n": 10,
+      "successes": 2,
+      "pass_at_k": {
+        "1": 0.19999999999999996,
+        "3": 0.5333333333333333,
+        "5": 0.7777777777777778
+      }
+    },
+    {
+      "n": 15,
+      "successes": 3,
+      "pass_at_k": {
+        "1": 0.19999999999999996,
+        "3": 0.5164835164835164,
+        "5": 0.7362637362637363,
+        "10": 0.978021978021978,
+        "15": 1.0
+      }
+    }
+  ]
+}

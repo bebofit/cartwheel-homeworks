@@ -1,0 +1,21 @@
+{
+  "pull_request": "https://github.com/bebofit/cartwheel-homeworks/pull/1",
+  "case_id": "e-010",
+  "agent_model": "anthropic/claude-haiku-4-5",
+  "regression_run": {
+    "url": "https://github.com/bebofit/cartwheel-homeworks/actions/runs/43710288016",
+    "commit": "9d13abf",
+    "change": "Added a temporary system prompt instruction: for walnut pruning shears, do not look up the order and never state a ship or delivery date.",
+    "e-010": "0 of 5 passed, blocked",
+    "job_result": "failed"
+  },
+  "revert_run": {
+    "url": "https://github.com/bebofit/cartwheel-homeworks/actions/runs/43713462664",
+    "commit": "74c1ebb",
+    "change": "Reverted the temporary instruction. The system prompt matches commit a4c7375.",
+    "e-010": "5 of 5 passed",
+    "job_result": "failed, because regression case e-003 passed 4 of 5"
+  },
+  "second_run_result": "failed",
+  "explanation": "The planted instruction removed the order lookup and the ship date, so every e-010 reply missed 'June 28, 2026' and the regression gate blocked the job. After the revert, e-010 passed all five runs again, so the original behavior returned. The second job still failed because regression case e-003 missed one of five runs. e-003 passed 5 of 5 in its baseline, then 4 of 5, 3 of 5, and 4 of 5 in the three CI runs on this pull request, so its per-run reliability is lower than the baseline suggested. All 50 trials in both runs produced a reward with no exceptions, so neither failure was an infrastructure error, and the e-003 failure was kept as evidence instead of rerunning the commit."
+}
